@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dennis Tier - Bảng Xếp Hạng & Tier List Minecraft PvP</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html2canvas -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <!-- Google Font: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        pinkAccent: '#ff5ce1',
+                        pinkDark: '#c026d3',
+                        pinkLight: '#f5d0fe',
+                        darkBg: '#07040c',
+                        cardDark: '#120a1c',
+                        borderDark: '#2a1740',
+                        discordBlurple: '#5865F2',
+                        discordHover: '#4752C4'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #06030b;
+            color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: 
+                radial-gradient(ellipse at 50% -10%, rgba(192, 38, 211, 0.30) 0%, rgba(6, 3, 11, 1) 58%),
+                radial-gradient(circle at 95% 90%, rgba(168, 85, 247, 0.16) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0612;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a2670;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a855f7;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* THANH CUỘN NGANG CHO HUY HIỆU TIER */
+        .horizontal-scroll-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: #6b2fa0 #0b0612;
+        }
+        .horizontal-scroll-container::-webkit-scrollbar {
+            height: 5px;
+        }
+        .horizontal-scroll-container::-webkit-scrollbar-track {
+            background: rgba(11, 6, 18, 0.6);
+            border-radius: 9999px;
+        }
+        .horizontal-scroll-container::-webkit-scrollbar-thumb {
+            background: #6b2fa0;
+            border-radius: 9999px;
+        }
+        .horizontal-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #ff5ce1;
+        }
+
+        /* TIER COLORS */
+        .tier-circle-tier1 { border: 2.5px solid rgba(250, 204, 21, 0.85); background-color: rgba(254, 243, 199, 0.08); }
+        .tier-label-tier1 { background-color: rgba(161, 98, 7, 0.3); color: #fde047; }
+
+        .tier-circle-tier2 { border: 2.5px solid rgba(148, 163, 184, 0.45); background-color: rgba(241, 245, 249, 0.08); }
+        .tier-label-tier2 { background-color: rgba(100, 116, 139, 0.3); color: #cbd5e1; }
+
+        .tier-circle-tier3 { border: 2.5px solid rgba(212, 143, 84, 0.85); background-color: rgba(245, 222, 179, 0.08); }
+        .tier-label-tier3 { background-color: rgba(146, 84, 39, 0.35); color: #f7b281; }
+
+        .tier-circle-tier4 { border: 2.5px solid #4ade80; background-color: rgba(240, 253, 244, 0.08); }
+        .tier-label-tier4 { background-color: rgba(22, 101, 52, 0.3); color: #86efac; }
+
+        .tier-circle-tier5 { border: 2.5px solid rgba(209, 213, 219, 0.45); background-color: rgba(249, 250, 251, 0.08); }
+        .tier-label-tier5 { background-color: rgba(107, 114, 128, 0.3); color: #d1d5db; }
+
+        .tier-circle-empty { border: 2.5px dashed rgba(168, 120, 220, 0.35); background-color: transparent; opacity: 0.6; }
+        .tier-label-empty { background-color: #170c25; color: #a995c4; opacity: 1; border: none; }
+
+        /* CỘT PLAYER / POINTS / TIERS THẲNG HÀNG */
+        .lb-grid {
+            display: grid !important;
+            grid-template-columns: 150px minmax(180px, 1fr) 90px minmax(0, 1.7fr) 28px;
+            column-gap: 12px;
+            align-items: center;
+        }
+        .lb-grid > * {
+            width: auto !important;
+            min-width: 0;
+        }
+
+        /* TOOLTIP KHI DI CHUỘT VÀO HUY HIỆU MODE (bảng profile) */
+        .tier-tip-host { position: relative; cursor: default; }
+        .tier-tip {
+            position: absolute; top: calc(100% + 8px); left: 50%;
+            transform: translateX(-50%) translateY(-4px);
+            background: #150a1f; border: 1px solid rgba(217,70,239,.45);
+            border-radius: 12px; padding: 8px 14px; white-space: nowrap; text-align: center;
+            box-shadow: 0 10px 28px rgba(0,0,0,.55);
+            opacity: 0; visibility: hidden; pointer-events: none;
+            transition: opacity .15s ease, transform .15s ease; z-index: 80;
+        }
+        .tier-tip::before {
+            content: ''; position: absolute; top: -5px; left: 50%; width: 8px; height: 8px;
+            transform: translateX(-50%) rotate(45deg); background: #150a1f;
+            border-left: 1px solid rgba(217,70,239,.45); border-top: 1px solid rgba(217,70,239,.45);
+        }
+        .tier-tip .tip-title { font-size: 13px; font-weight: 800; color: #fff; }
+        .tier-tip .tip-sub { font-size: 12px; font-weight: 500; color: #c4b2dc; margin-top: 1px; }
+        .tier-tip-host:hover .tier-tip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .tier-tip-host:hover > div:first-child { transform: scale(1.08); transition: transform .15s ease; }
+
+        /* HUY HIỆU TIER HÌNH LỤC GIÁC */
+        .hex-wrap, .hex-in {
+            clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .hex-wrap { width: 44px; height: 48px; background: var(--hc, #facc15); }
+        .hex-in { width: calc(100% - 5px); height: calc(100% - 5px); background: #12081a; }
+        .hex-wrap.hex-empty { opacity: .55; }
+
+        /* HIỆU ỨNG HOVER HÀNG NGƯỜI CHƠI */
+        .player-row {
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                        background-color 0.25s ease, 
+                        box-shadow 0.25s ease;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background-color: #10091a;
+            border-radius: 1rem;
+            margin-bottom: 12px;
+            overflow: hidden;
+            min-height: 92px;
+            cursor: pointer;
+            -webkit-font-smoothing: antialiased;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+        .player-row:hover {
+            background-color: #1c0f2b !important;
+            transform: scale(1.01) translateZ(0);
+            box-shadow: 0 0 24px rgba(217, 70, 239, 0.40), inset 0 0 12px rgba(217, 70, 239, 0.12);
+            z-index: 20;
+            position: relative;
+        }
+
+        /* THẺ PLAYER TRONG CỘT TIER */
+        .tier-col-card {
+            background: linear-gradient(90deg, #2a1340 0%, #1a0d27 100%);
+            border-radius: 0.6rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .tier-col-card:hover {
+            background: linear-gradient(90deg, #3a1a55 0%, #241038 100%);
+            transform: scale(1.02);
+            box-shadow: 0 0 16px rgba(217, 70, 239, 0.35);
+        }
+
+        #modeTabsWrapper {
+            overflow: visible !important;
+            padding-top: 4px;
+            position: relative;
+            gap: 2px;
+        }
+
+        #activeIndicator {
+            position: absolute;
+            bottom: 0px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff5ce1, #a855f7);
+            box-shadow: 0 0 10px #d946ef;
+            border-radius: 2px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 35;
+            pointer-events: none;
+            will-change: transform, width;
+        }
+
+        .mode-btn {
+            background-color: #1a0f2a;
+            border: none;
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .mode-btn:hover {
+            background-color: #1a0f2a;
+            z-index: 40;
+        }
+
+        .mode-btn:hover img {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 5px rgba(255, 92, 225, 0.8));
+            transition: transform 0.2s ease;
+        }
+
+        .mode-btn:hover span {
+            color: #ff5ce1;
+        }
+
+        .mode-btn.active {
+            background-color: #1a0f2a;
+            border: none;
+            z-index: 30;
+            box-shadow: none;
+        }
+
+        .btn-text-collapse {
+            display: grid;
+            grid-template-columns: 1fr;
+            transition: grid-template-columns 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.25s ease,
+                        margin 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+        }
+
+        .btn-text-collapse.collapsed {
+            grid-template-columns: 0fr;
+            opacity: 0;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        .btn-text-inner {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .menu-dropdown-anim {
+            transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: top right;
+        }
+        .menu-dropdown-anim.hidden-anim {
+            opacity: 0;
+            transform: scale(0.95) translateY(-8px);
+            pointer-events: none;
+        }
+        .menu-dropdown-anim.visible-anim {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        /* ===== GIAO DIỆN MỚI ===== */
+        .card-dark { background: rgba(18, 11, 16, 0.82); border: 1px solid rgba(168,85,247,0.22); border-radius: 1.25rem; box-shadow: 0 10px 40px rgba(0,0,0,0.35); }
+        .nav-item { display:flex; align-items:center; gap:10px; font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#cbd5e1; transition:color .2s; }
+        .nav-item:hover { color:#ff5ce1; }
+        .nav-chip { width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:10px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#94a3b8; font-size:13px; }
+        .nav-item.active { color:#fff; }
+        .nav-item.active .nav-chip { color:#ff5ce1; background:rgba(217,70,239,.18); border-color:rgba(217,70,239,.5); }
+        .mode-btn { background-color: transparent; border-radius: .9rem; }
+        .mode-btn:hover { background-color: rgba(255,255,255,.04); }
+        .mode-btn.active { background-color: rgba(217,70,239,.12); }
+        #activeIndicator { bottom: 2px; }
+        .chip { padding:6px 14px; border-radius:999px; font-size:11px; font-weight:800; letter-spacing:.06em; border:1px solid rgba(255,255,255,.08); background:#0f0818; color:#e9ddf7; transition:all .2s; }
+        .chip:hover { border-color: rgba(217,70,239,.6); }
+        .chip.active { background:rgba(217,70,239,.22); border-color:rgba(217,70,239,.8); color:#ff9df0; }
+        .rank-panel { position:relative; align-self:stretch; background:#1a1026; clip-path: polygon(0 0, 100% 0, 86% 100%, 0 100%); }
+        .rank-panel img { position:absolute; right:8%; bottom:0; height:86%; width:auto; max-width:60%; object-fit:contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,.5)); }
+        .rank-panel .rank-num { position:absolute; left:12px; bottom:6px; z-index:2; font-style:italic; font-weight:800; font-size:2rem; line-height:1; color:#fff; text-shadow:0 2px 0 rgba(0,0,0,.45), 0 0 8px rgba(0,0,0,.5); }
+        .row-r1 .rank-panel { background: linear-gradient(135deg, #f5c542, #dfa224); }
+        .row-r2 .rank-panel { background: linear-gradient(135deg, #8fb3c2, #5f8294); }
+        .row-r3 .rank-panel { background: linear-gradient(135deg, #db7a2c, #b85c14); }
+        .row-r1 { border-color: rgba(234,179,8,.6); background-image: linear-gradient(90deg, rgba(234,179,8,.10), transparent 45%); box-shadow: 0 0 20px rgba(234,179,8,.14); }
+        .row-r2 { border-color: rgba(226,232,240,.5); }
+        .row-r3 { border-color: rgba(251,146,60,.5); }
+        .title-badge { display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:8px; font-size:10.5px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; white-space:nowrap; }
+        .region-pill { background:linear-gradient(135deg,#c026d3,#7e22ce); color:#fff; font-weight:800; font-size:13px; padding:6px 12px; border-radius:10px; }
+        @media (max-width: 639px) {
+            .lb-grid { grid-template-columns: 84px minmax(90px, 1fr) minmax(0, 1fr) 28px; column-gap: 8px; }
+            .lb-region { display: none !important; }
+            .rank-panel .rank-num { font-size: 1.5rem; left: 8px; }
+            .row-title-points { font-size: 12px; }
+        }
+
+        /* ===== OVERRIDE: slate -> trắng/tím nhạt ===== */
+        .text-slate-300 { color: #f1e8fb !important; }
+        .text-slate-400 { color: #bfaedb !important; }
+        .text-slate-500 { color: #9885b8 !important; }
+        .text-slate-600 { color: #6f5c91 !important; }
+        .text-gray-400 { color: #bfaedb !important; }
+        .border-gray-800, .border-gray-800\/80 { border-color: rgba(168,85,247,.25) !important; }
+        input::placeholder { color: #8d7aae !important; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-fuchsia-500 selection:text-white">
+
+    <!-- Navigation Bar -->
+    <nav class="w-full sticky top-0 z-50 px-4 sm:px-6 pt-4 pb-1 pointer-events-none">
+        <div class="max-w-[1360px] mx-auto pointer-events-auto rounded-2xl border border-white/10 bg-[#0f0716]/85 backdrop-blur-md px-4 sm:px-6 shadow-lg shadow-black/40">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-8">
+                    <a href="#" class="flex items-center space-x-3 group">
+                        <img src="https://i.ibb.co/q3SQv1Xw/minecraft-title.webp" alt="DENNIS TIER" class="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-200 drop-shadow-[0_2px_10px_rgba(255,92,225,0.5)]" onerror="this.onerror=null; this.src='https://api.iconify.design/twemoji:sword.svg';">
+                    </a>
+                    
+                    <div class="hidden md:flex items-center space-x-8">
+                        <button onclick="switchMainView('leaderboard')" id="navBtnLeaderboard" class="nav-item active">
+                            <span class="nav-chip"><i class="fa-solid fa-list-ol"></i></span> Bảng Xếp Hạng
+                        </button>
+                        <a href="https://discord.gg/TCyJ39XSg" target="_blank" class="nav-item">
+                            <span class="nav-chip"><i class="fa-brands fa-discord"></i></span> Discord
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div id="userAuthContainer" class="flex-shrink-0">
+                        <a href="#" id="discordAuthBtn" onclick="loginWithDiscord(event)" 
+                           class="bg-[#5865F2] hover:bg-[#4752C4] text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center justify-center transition-all duration-300 ease-in-out shadow-md shadow-discordBlurple/20 flex-shrink-0 active:scale-95 transform overflow-hidden">
+                            <i class="fa-brands fa-discord text-sm flex-shrink-0"></i>
+                            <div id="discordBtnText" class="btn-text-collapse ml-2">
+                                <div class="btn-text-inner">
+                                    <span class="hidden sm:inline">Đăng nhập với Discord</span>
+                                    <span class="sm:hidden">Discord</span>
+                                </div>
+                            </div>
+                            <i id="discordBtnSpinner" class="fa-solid fa-circle-notch fa-spin text-xs hidden opacity-0 transition-all duration-300"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-[1360px] w-full mx-auto px-4 sm:px-6 py-6 relative z-10">
+        
+        <div class="w-full">
+            <!-- Tabs Bar -->
+            <div class="card-dark p-2 mb-5">
+                <div class="w-full overflow-x-auto overflow-y-visible no-scrollbar">
+                    <div id="modeTabsWrapper" class="flex items-center gap-1 w-max relative pb-1">
+                        <div id="activeIndicator"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 1: Leaderboard Container -->
+            <div id="leaderboardView" class="card-dark relative z-10 overflow-hidden">
+                <div class="px-4 sm:px-7 pt-6 sm:pt-7">
+                    <div class="flex items-start justify-between gap-4 mb-5">
+                        <div>
+                            <h1 id="viewTitle" class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Bảng Xếp Hạng</h1>
+                            <p id="viewSubtitle" class="text-slate-400 text-sm mt-1">Tổng hợp thứ hạng và điểm số trên mọi chế độ.</p>
+                        </div>
+                        <button onclick="openInfoModal()" class="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-300 border border-white/10 bg-white/[0.03] hover:border-fuchsia-400/60 hover:text-white transition-colors">
+                            <i class="fa-solid fa-circle-info"></i> <span class="hidden sm:inline">Thông tin</span>
+                        </button>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3 mb-6">
+                        <div class="relative w-full sm:w-80">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                            <input id="searchInput" type="text" placeholder="Tìm người chơi..."
+                                class="w-full bg-[#0b0612] text-xs font-semibold text-white pl-10 pr-4 py-3 rounded-xl border border-white/10 focus:outline-none focus:border-fuchsia-400 placeholder:text-slate-500">
+                        </div>
+                        <div id="regionChips" class="flex flex-wrap items-center gap-2"></div>
+                    </div>
+                </div>
+
+                <div id="overallLeaderboardContent" class="px-4 sm:px-7 pb-6 sm:pb-7">
+                    <div class="lb-grid text-[11px] font-extrabold text-slate-500 tracking-[0.18em] uppercase pb-3 pr-3.5">
+                        <div class="text-center">#</div>
+                        <div class="pl-2">PLAYER</div>
+                        <div class="lb-region text-center">REGION</div>
+                        <div class="text-center">TIERS</div>
+                        <div></div>
+                    </div>
+
+                    <div id="leaderboardBody" class="flex flex-col text-sm font-semibold">
+                        <!-- Rendered via JS -->
+                    </div>
+                </div>
+
+                <div id="modeTierColumnsContent" class="hidden p-3 sm:p-4 bg-[#12081b]">
+                    <div id="tierColumnsGrid" class="grid grid-cols-1 sm:grid-cols-5 gap-0 min-h-[420px]">
+                        <!-- Rendered via JS -->
+                    </div>
+                </div>
+
+                <div id="emptyState" class="hidden py-16 text-center">
+                    <i class="fa-solid fa-ghost text-4xl text-slate-600 mb-3 block"></i>
+                    <p class="text-slate-300 font-bold text-sm">Không tìm thấy người chơi nào</p>
+                    <p class="text-slate-500 text-xs mt-1">Hãy thử tìm kiếm tên khác hoặc kiểm tra lại Appwrite.</p>
+                </div>
+            </div>
+
+            <!-- VIEW 2: Tier List Maker -->
+            <div id="tierlistView" class="hidden space-y-4 pt-3">
+                <div class="flex items-center justify-between bg-[#0f0716]/80 p-4 rounded-xl shadow-sm">
+                    <span class="text-xs font-semibold text-slate-300">Kéo thả avatar nhân vật vào các bậc Tier tương ứng</span>
+                    <button onclick="exportTierlistImage()" class="bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white text-xs font-extrabold px-4 py-2 rounded-lg flex items-center gap-1.5 transition-colors shadow-md shadow-fuchsia-600/30">
+                        <i class="fa-solid fa-download"></i> Xuất Ảnh
+                    </button>
+                </div>
+
+                <div id="tierlistBoard" class="space-y-3 bg-[#0f0716]/80 p-5 rounded-xl shadow-sm backdrop-blur-md">
+                </div>
+
+                <div class="bg-[#0f0716]/80 p-5 rounded-xl shadow-sm">
+                    <h3 class="text-xs font-extrabold text-fuchsia-400 uppercase tracking-wider mb-3">Kho Người Chơi Chưa Phân Tier</h3>
+                    <div id="unassignedPool" class="flex flex-wrap gap-3 min-h-[70px] p-4 bg-[#1d1030]/50 rounded-lg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-fuchsia-900/40 bg-[#06030b]/80 py-6 text-center text-xs text-slate-500 relative z-10">
+        <div class="max-w-[1360px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>© 2026 DENNIS TIER - Minecraft PvP Ranking System. All rights reserved.</p>
+            <div class="flex items-center space-x-5 font-semibold">
+                <a href="#" class="hover:text-fuchsia-400 transition-colors">Điều khoản</a>
+                <a href="#" class="hover:text-fuchsia-400 transition-colors">Bảo mật</a>
+                <a href="https://discord.gg" target="_blank" class="hover:text-fuchsia-400 transition-colors">Discord Community</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INFO MODAL -->
+    <div id="infoModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4" onclick="if(event.target===this)closeInfoModal()">
+        <div class="card-dark w-full max-w-[460px] p-6 relative max-h-[85vh] overflow-y-auto" style="background:#12081b">
+            <button onclick="closeInfoModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center"><i class="fa-solid fa-xmark text-sm"></i></button>
+            <h2 class="text-xl font-extrabold text-white mb-4">Cách tính điểm</h2>
+            <div id="infoTiers" class="grid grid-cols-5 gap-2 mb-6"></div>
+            <h3 class="text-xs font-extrabold text-slate-400 tracking-widest uppercase mb-2">Danh hiệu</h3>
+            <div id="infoTitles" class="flex flex-col gap-2"></div>
+        </div>
+    </div>
+
+    <!-- PLAYER PROFILE MODAL -->
+    <div id="playerModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden overflow-y-auto" onclick="if(event.target===this)closeModal()">
+        <div class="min-h-full flex items-center justify-center p-4" onclick="if(event.target===this)closeModal()">
+        <div class="bg-[#130a1d] border border-fuchsia-500/50 shadow-[0_0_45px_rgba(217,70,239,0.28)] w-full max-w-[575px] rounded-2xl shadow-2xl px-6 sm:px-7 pt-6 pb-6 relative">
+
+            <button onclick="closeModal()" class="absolute top-3 right-3 w-9 h-9 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+
+            <h2 id="modalUsername" class="text-2xl sm:text-[28px] leading-tight font-black text-white pr-10 mb-2 truncate">Player</h2>
+
+            <div class="flex items-center gap-2 mb-2">
+                <span id="modalRegion" class="region-pill" style="font-size:11px;padding:4px 10px;border-radius:8px;">AS</span>
+                <span id="modalTitle" class="title-badge"></span>
+            </div>
+
+            <div class="relative flex justify-center mb-3" style="height:200px;">
+                <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse at 50% 55%, rgba(217,70,239,.22) 0%, transparent 62%);"></div>
+                <img id="modalSkinImg" src="" alt="Skin" class="relative h-full w-auto object-contain drop-shadow-[0_6px_10px_rgba(0,0,0,.6)]">
+            </div>
+
+            <h3 class="text-[11px] font-extrabold text-slate-500 tracking-[0.18em] uppercase mb-2">POSITION</h3>
+            <div id="modalRankBar" class="flex items-center rounded-xl overflow-hidden border bg-[#1a0d27] h-[54px] mb-4" style="border-color: rgba(217,70,239,.55);">
+                <div id="modalRankBox" class="h-full w-[80px] flex items-center pl-4 text-2xl font-black italic text-white flex-shrink-0" style="clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);">
+                    <span id="modalRankNum">1.</span>
+                </div>
+                <div class="flex items-center gap-2 pl-3 text-base font-black tracking-wide text-white">
+                    <i id="modalTrophy" class="fa-solid fa-trophy" style="color:#e879f9;"></i> OVERALL
+                    <span id="modalPoints" class="text-slate-400 font-semibold text-xs">(0 points)</span>
+                </div>
+            </div>
+
+            <h3 class="text-[11px] font-extrabold text-slate-500 tracking-[0.18em] uppercase mb-2">TIERS</h3>
+            <div id="modalTiersContainer" class="bg-[#0c0614]/80 border border-white/10 rounded-xl px-3 py-3.5 flex flex-wrap items-start justify-center gap-x-3 gap-y-3">
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Appwrite Web SDK CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1"></script>
+
+    <script>
+        const { Client, Databases, Account, Avatars, Query } = Appwrite;
+        
+        const client = new Client()
+            .setEndpoint('https://sgp.cloud.appwrite.io/v1') 
+            .setProject('6abe0b1f00000e883399');
+
+        const databases = new Databases(client);
+        const account = new Account(client);
+        const avatars = new Avatars(client);
+        
+        const DATABASE_ID = '6abe0bb6000caab818b9';
+        const COLLECTION_ID = '6abe0d8300108a42b831';
+
+        const TIER_POINTS = {
+            'HT1': 60, 'LT1': 45, 'HT2': 30, 'LT2': 20, 'HT3': 10,
+            'LT3': 6, 'HT4': 4, 'LT4': 3, 'HT5': 2, 'LT5': 1
+        };
+
+        let currentUser = null;
+
+        const DEFAULT_REGION = 'AS'; // đổi nếu muốn, hoặc thêm trường "region" trong Appwrite
+        const REGIONS = ['NA', 'EU', 'AS', 'SA', 'AU', 'ME'];
+        let regionFilter = 'ALL';
+        let sortByRegion = false;
+
+        // Ngưỡng điểm cho danh hiệu — chỉnh tại đây
+        const COMBAT_TITLES = [
+            { min: 250, name: 'Combat Grandmaster', color: '#facc15', bg: 'rgba(250,204,21,.12)' },
+            { min: 180, name: 'Combat Master', color: '#fb923c', bg: 'rgba(251,146,60,.12)' },
+            { min: 120, name: 'Combat Ace', color: '#f472b6', bg: 'rgba(244,114,182,.12)' },
+            { min: 70, name: 'Combat Specialist', color: '#c4b5fd', bg: 'rgba(196,181,253,.12)' },
+            { min: 30, name: 'Combat Cadet', color: '#7dd3fc', bg: 'rgba(125,211,252,.12)' },
+            { min: 10, name: 'Combat Novice', color: '#cbd5e1', bg: 'rgba(203,213,225,.10)' },
+            { min: 0, name: 'Rookie', color: '#94a3b8', bg: 'rgba(148,163,184,.10)' }
+        ];
+        function getCombatTitle(points) {
+            return COMBAT_TITLES.find(t => points >= t.min) || COMBAT_TITLES[COMBAT_TITLES.length - 1];
+        }
+
+        function setRegionFilter(r) { regionFilter = r; renderRegionChips(); renderLeaderboard(); }
+        function toggleRegionSort() { sortByRegion = !sortByRegion; renderRegionChips(); renderLeaderboard(); }
+        function renderRegionChips() {
+            const el = document.getElementById('regionChips');
+            if (!el) return;
+            el.innerHTML = ['ALL', ...REGIONS].map(r =>
+                `<button onclick="setRegionFilter('${r}')" class="chip ${regionFilter === r ? 'active' : ''}">${r}</button>`
+            ).join('') + `<button onclick="toggleRegionSort()" class="chip ${sortByRegion ? 'active' : ''}"><i class="fa-solid fa-sort mr-1"></i>REGION</button>`;
+        }
+
+        function openInfoModal() {
+            document.getElementById('infoTiers').innerHTML = Object.entries(TIER_POINTS).map(([k, v]) =>
+                `<div class="rounded-lg bg-white/5 py-2 text-center"><div class="text-xs font-black text-fuchsia-300">${k}</div><div class="text-sm font-bold text-white">${v}</div></div>`
+            ).join('');
+            document.getElementById('infoTitles').innerHTML = COMBAT_TITLES.map(t =>
+                `<div class="flex items-center justify-between"><span class="title-badge" style="color:${t.color};background:${t.bg}"><i class="fa-solid fa-gem"></i>${t.name}</span><span class="text-xs font-semibold text-slate-400">từ ${t.min} điểm</span></div>`
+            ).join('');
+            document.getElementById('infoModal').classList.remove('hidden');
+        }
+        function closeInfoModal() { document.getElementById('infoModal').classList.add('hidden'); }
+
+        function calculatePlayerPoints(tiersObj) {
+            if (!tiersObj) return 0;
+            let total = 0;
+            let tiers = typeof tiersObj === 'string' ? JSON.parse(tiersObj) : tiersObj;
+            for (const modeId in tiers) {
+                const tierVal = tiers[modeId];
+                if (tierVal && TIER_POINTS[tierVal]) total += TIER_POINTS[tierVal];
+            }
+            return total;
+        }
+
+        const defaultModes = [
+            { id: 'overall', name: 'OVERALL', icon: 'https://i.ibb.co/mVXCSfp6/tier-1.webp' },
+            { id: 'Sword', name: 'SWORD', icon: 'https://cdn.discordapp.com/emojis/1549311745951010867.webp?size=48&quality=lossless' },
+            { id: 'NetheritePot', name: 'NETHOP', icon: 'https://cdn.discordapp.com/emojis/1549311747725336598.webp?size=48&quality=lossless' },
+            { id: 'SMP', name: 'SMP', icon: 'https://cdn.discordapp.com/emojis/1549311750254493696.webp?size=48&quality=lossless' },
+            { id: 'UHC', name: 'UHC', icon: 'https://cdn.discordapp.com/emojis/1549311742000103443.webp?size=48&quality=lossless' },
+            { id: 'Axe', name: 'AXE', icon: 'https://cdn.discordapp.com/emojis/1549311752771084348.webp?size=48&quality=lossless' },
+            { id: 'Vanilla', name: 'VANILLA', icon: 'https://cdn.discordapp.com/emojis/1549311743975497759.webp?size=48&quality=lossless' },
+            { id: 'Mace', name: 'MACE', icon: 'https://cdn.discordapp.com/emojis/1549311739462422558.webp?size=48&quality=lossless' },
+            { id: 'TNTCart', name: 'TNT CART', icon: 'https://i.ibb.co/whJpHpM7/cart.png' }, // TODO: dán URL ảnh TNT CART vào icon
+            { id: 'Spear', name: 'SPEAR', icon: 'https://i.ibb.co/7x3Zs6TV/spear.png' }      // TODO: dán URL ảnh SPEAR vào icon
+        ];
+
+        let players = [];
+        let modes = defaultModes;
+        let activeTab = 'overall';
+        let searchQuery = '';
+        let currentView = 'leaderboard';
+        const TIER_RANKS = ['HT1', 'HT2', 'HT3', 'HT4', 'HT5', 'LT1', 'LT2', 'LT3', 'LT4', 'LT5'];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTabs();
+            fetchTiersFromAppwrite();
+            setupSearchListener();
+            checkAuthStatus();
+            setTimeout(updateIndicatorPosition, 50);
+
+            document.addEventListener('click', (event) => {
+                const menuContainer = document.getElementById('userMenuContainer');
+                if (menuContainer && !menuContainer.contains(event.target)) {
+                    closeUserMenu();
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => updateIndicatorPosition());
+
+        async function checkAuthStatus() {
+            try {
+                const user = await account.get();
+                let realAvatarUrl = null;
+                let discordUsername = user.name;
+                let discordDisplayName = user.name;
+
+                try {
+                    const session = await account.getSession('current');
+                    if (session && session.providerAccessToken) {
+                        const res = await fetch('https://discord.com/api/users/@me', {
+                            headers: { Authorization: `Bearer ${session.providerAccessToken}` }
+                        });
+                        
+                        if (res.ok) {
+                            const discordData = await res.json();
+                            discordUsername = discordData.username || user.name;
+                            discordDisplayName = discordData.global_name || discordData.username || user.name;
+
+                            if (discordData.avatar) {
+                                realAvatarUrl = `https://cdn.discordapp.com/avatars/${discordData.id}/${discordData.avatar}.png?size=128`;
+                            } else {
+                                const defaultAvatarNum = (BigInt(discordData.id) >> 22n) % 5n;
+                                realAvatarUrl = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNum}.png`;
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.warn("Không thể lấy dữ liệu từ Discord API:", err);
+                }
+
+                if (!realAvatarUrl) {
+                    realAvatarUrl = avatars.getInitials(user.name || 'User').toString();
+                }
+
+                currentUser = {
+                    ...user,
+                    displayName: discordDisplayName,
+                    username: discordUsername,
+                    avatarUrl: realAvatarUrl
+                };
+
+                renderUserAuthUI(currentUser);
+            } catch (err) {
+                currentUser = null;
+                renderUserAuthUI(null);
+            }
+        }
+
+        function toggleUserMenu(e) {
+            if (e) e.stopPropagation();
+            const dropdown = document.getElementById('userMenuDropdown');
+            const chevron = document.getElementById('userMenuChevron');
+            if (!dropdown) return;
+
+            const isHidden = dropdown.classList.contains('hidden-anim');
+            if (isHidden) {
+                dropdown.classList.remove('hidden');
+                setTimeout(() => {
+                    dropdown.classList.remove('hidden-anim');
+                    dropdown.classList.add('visible-anim');
+                }, 10);
+                if (chevron) chevron.classList.add('rotate-180');
+            } else {
+                dropdown.classList.remove('visible-anim');
+                dropdown.classList.add('hidden-anim');
+                if (chevron) chevron.classList.remove('rotate-180');
+                setTimeout(() => { dropdown.classList.add('hidden'); }, 200);
+            }
+        }
+
+        function closeUserMenu() {
+            const dropdown = document.getElementById('userMenuDropdown');
+            const chevron = document.getElementById('userMenuChevron');
+            if (dropdown && dropdown.classList.contains('visible-anim')) {
+                dropdown.classList.remove('visible-anim');
+                dropdown.classList.add('hidden-anim');
+                if (chevron) chevron.classList.remove('rotate-180');
+                setTimeout(() => { dropdown.classList.add('hidden'); }, 200);
+            }
+        }
+
+        function renderUserAuthUI(user) {
+            const container = document.getElementById('userAuthContainer');
+            if (!container) return;
+
+            if (user) {
+                const displayName = user.displayName || user.name || 'Người dùng';
+                const username = user.username || 'user';
+                const avatarUrl = user.avatarUrl;
+
+                container.innerHTML = `
+                    <div id="userMenuContainer" class="relative inline-block text-left select-none">
+                        <button onclick="toggleUserMenu(event)" type="button" class="flex items-center gap-3 px-3 py-1.5 bg-[#12081c] hover:bg-[#1d1030] border border-gray-800/80 rounded-xl transition-all cursor-pointer text-white">
+                            <img src="${avatarUrl}" alt="${displayName}" class="w-8 h-8 rounded-lg object-cover bg-[#1d1030]" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"/>
+                            <div class="flex flex-col text-left leading-tight">
+                                <span class="font-bold text-xs text-white">${displayName}</span>
+                                <span class="text-[10px] text-gray-400">@${username}</span>
+                            </div>
+                            <i id="userMenuChevron" class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-200 ml-1"></i>
+                        </button>
+                        <div id="userMenuDropdown" class="hidden hidden-anim menu-dropdown-anim absolute right-0 mt-2 w-64 bg-[#12081c] border border-gray-800 rounded-2xl shadow-2xl z-50 p-4">
+                            <div class="flex items-center justify-between pb-3 border-b border-gray-800/80">
+                                <div class="flex items-center gap-3">
+                                    <img src="${avatarUrl}" alt="${displayName}" class="w-10 h-10 rounded-xl object-cover bg-[#1d1030]" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"/>
+                                    <div class="flex flex-col text-left leading-tight">
+                                        <span class="font-bold text-sm text-white">${displayName}</span>
+                                        <span class="text-xs text-gray-400">@${username}</span>
+                                    </div>
+                                </div>
+                                <button onclick="toggleUserMenu(event)" class="text-gray-400 hover:text-white transition-colors" type="button">
+                                    <i class="fa-solid fa-chevron-up text-xs"></i>
+                                </button>
+                            </div>
+                            <div class="pt-3">
+                                <button id="logoutBtn" onclick="logoutDiscord(event)" type="button" class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-red-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all cursor-pointer">
+                                    <div class="flex items-center gap-2.5">
+                                        <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                                        <span>Đăng xuất</span>
+                                    </div>
+                                    <i id="logoutSpinner" class="fa-solid fa-circle-notch fa-spin text-xs hidden opacity-0 transition-all duration-200"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <a href="#" id="discordAuthBtn" onclick="loginWithDiscord(event)" 
+                       class="bg-[#5865F2] hover:bg-[#4752C4] text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center justify-center transition-all duration-300 ease-in-out shadow-md shadow-discordBlurple/20 flex-shrink-0 active:scale-95 transform overflow-hidden">
+                        <i class="fa-brands fa-discord text-sm flex-shrink-0"></i>
+                        <div id="discordBtnText" class="btn-text-collapse ml-2">
+                            <div class="btn-text-inner">
+                                <span class="hidden sm:inline">Đăng nhập với Discord</span>
+                                <span class="sm:hidden">Discord</span>
+                            </div>
+                        </div>
+                        <i id="discordBtnSpinner" class="fa-solid fa-circle-notch fa-spin text-xs hidden opacity-0 transition-all duration-300"></i>
+                    </a>
+                `;
+            }
+        }
+
+        function loginWithDiscord(e) {
+            if (e) e.preventDefault();
+            const btn = document.getElementById('discordAuthBtn');
+            const btnText = document.getElementById('discordBtnText');
+            const btnSpinner = document.getElementById('discordBtnSpinner');
+
+            if (btn && btnText) {
+                btn.classList.add('pointer-events-none', 'scale-95');
+                btnText.classList.add('collapsed');
+
+                setTimeout(() => {
+                    btn.classList.remove('scale-95');
+                    if (btnSpinner) {
+                        btnSpinner.classList.remove('hidden');
+                        btnSpinner.classList.add('ml-2');
+                        setTimeout(() => { btnSpinner.classList.remove('opacity-0'); }, 20);
+                    }
+                }, 180);
+            }
+
+            setTimeout(() => {
+                try {
+                    const redirectUrl = window.location.href.split('?')[0].split('#')[0];
+                    account.createOAuth2Session('discord', redirectUrl, redirectUrl);
+                } catch (err) {
+                    console.error("Lỗi đăng nhập Discord:", err);
+                    renderUserAuthUI(null);
+                }
+            }, 450);
+        }
+
+        async function logoutDiscord(e) {
+            if (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            const logoutBtn = document.getElementById('logoutBtn');
+            const logoutSpinner = document.getElementById('logoutSpinner');
+
+            if (logoutBtn && logoutSpinner) {
+                logoutBtn.classList.add('pointer-events-none', 'opacity-70');
+                logoutSpinner.classList.remove('hidden');
+                setTimeout(() => logoutSpinner.classList.remove('opacity-0'), 10);
+            }
+
+            try {
+                await account.deleteSession('current');
+            } catch (err) {
+                console.error("Lỗi đăng xuất:", err);
+            } finally {
+                currentUser = null;
+                closeUserMenu();
+                setTimeout(() => { renderUserAuthUI(null); }, 200);
+            }
+        }
+
+        async function fetchTiersFromAppwrite() {
+            try {
+                const response = await databases.listDocuments(
+                    DATABASE_ID,
+                    COLLECTION_ID,
+                    [Query.limit(100)]
+                );
+
+                if (response && response.documents) {
+                    players = response.documents.map(doc => {
+                        let parsedTiers = doc.tiers;
+                        if (typeof parsedTiers === 'string') {
+                            try { parsedTiers = JSON.parse(parsedTiers); } catch(e) { parsedTiers = {}; }
+                        }
+                        return {
+                            id: doc.$id,
+                            username: doc.username,
+                            avatarUrl: doc.avatarUrl || doc.skin || `https://vzge.me/bust/220/${doc.username}.png`,
+                            region: (doc.region || DEFAULT_REGION).toUpperCase(),
+                            tiers: parsedTiers || {},
+                            points: calculatePlayerPoints(parsedTiers)
+                        };
+                    });
+
+                    players.sort((a, b) => b.points - a.points);
+                    renderLeaderboard();
+                }
+            } catch (err) {
+                console.error('Lỗi kết nối Appwrite:', err);
+            }
+        }
+
+        function switchMainView(view) {
+            currentView = view;
+            const lbView = document.getElementById('leaderboardView');
+            const tlView = document.getElementById('tierlistView');
+            const btnLb = document.getElementById('navBtnLeaderboard');
+            const title = document.getElementById('viewTitle');
+            const subtitle = document.getElementById('viewSubtitle');
+
+            if (view === 'leaderboard') {
+                lbView.classList.remove('hidden');
+                tlView.classList.add('hidden');
+                btnLb.className = "nav-item active";
+                title.innerText = "Bảng Xếp Hạng";
+                subtitle.innerText = "Khám phá thứ hạng và điểm số của các chiến binh hàng đầu trong từng chế độ.";
+                renderLeaderboard();
+            } else {
+                lbView.classList.add('hidden');
+                tlView.classList.remove('hidden');
+                btnLb.className = "nav-item";
+                title.innerText = "Tier List Maker";
+                subtitle.innerText = `Kéo thả xếp hạng người chơi cho Chế độ: ${activeTab.toUpperCase()}`;
+                renderTierlistMaker();
+            }
+        }
+
+        function renderTabs() {
+            const wrapper = document.getElementById('modeTabsWrapper');
+            const indicator = document.getElementById('activeIndicator');
+            wrapper.innerHTML = '';
+            wrapper.appendChild(indicator);
+
+            modes.forEach((mode, index) => {
+                const isActive = activeTab === mode.id;
+                const activeClass = isActive ? 'active' : '';
+
+                const btn = document.createElement('button');
+                btn.id = `tab_btn_${mode.id}`;
+                btn.onclick = () => switchTab(mode.id);
+                
+                let radiusClass = 'rounded-xl';
+
+                btn.className = `mode-btn flex-shrink-0 min-w-[84px] flex flex-col items-center justify-center gap-1 px-3 py-2.5 ${radiusClass} group ${activeClass}`;
+                
+                btn.innerHTML = `
+                    <div class="w-6 h-6 flex items-center justify-center">
+                        <img src="${mode.icon}" class="w-6 h-6 object-contain drop-shadow-sm transition-transform duration-300" alt="${mode.name}">
+                    </div>
+                    <span class="text-[11px] tracking-wider font-extrabold text-slate-300 group-hover:text-fuchsia-400 transition-colors inline-block">${mode.name}</span>
+                `;
+                wrapper.appendChild(btn);
+            });
+            updateIndicatorPosition();
+        }
+
+        function updateIndicatorPosition() {
+            const activeBtn = document.getElementById(`tab_btn_${activeTab}`);
+            const indicator = document.getElementById('activeIndicator');
+            const wrapper = document.getElementById('modeTabsWrapper');
+
+            if (activeBtn && indicator && wrapper) {
+                const btnRect = activeBtn.getBoundingClientRect();
+                const wrapperRect = wrapper.getBoundingClientRect();
+                const leftPos = btnRect.left - wrapperRect.left + wrapper.scrollLeft;
+                const width = btnRect.width;
+
+                const lineW = 44;
+                indicator.style.width = `${lineW}px`;
+                indicator.style.transform = `translateX(${leftPos + (width - lineW) / 2}px)`;
+            }
+        }
+
+        function switchTab(modeId) {
+            if (activeTab === modeId) return;
+            activeTab = modeId;
+            
+            modes.forEach(m => {
+                const b = document.getElementById(`tab_btn_${m.id}`);
+                if (b) {
+                    if (m.id === modeId) b.classList.add('active');
+                    else b.classList.remove('active');
+                }
+            });
+
+            updateIndicatorPosition();
+
+            if (currentView === 'leaderboard') {
+                renderLeaderboard();
+            } else {
+                document.getElementById('viewSubtitle').innerText = `Kéo thả xếp hạng người chơi cho Chế độ: ${activeTab.toUpperCase()}`;
+                renderTierlistMaker();
+            }
+        }
+
+        function getTierClass(tierVal) {
+            const base = {
+                1: ['tier-circle-tier1', 'tier-label-tier1', '#facc15'],
+                2: ['tier-circle-tier2', 'tier-label-tier2', '#94a3b8'],
+                3: ['tier-circle-tier3', 'tier-label-tier3', '#d48f54'],
+                4: ['tier-circle-tier4', 'tier-label-tier4', '#4ade80'],
+                5: ['tier-circle-tier5', 'tier-label-tier5', '#9ca3af']
+            };
+            const n = tierVal ? parseInt(String(tierVal).slice(-1), 10) : 2;
+            const t = base[n] || base[2];
+            return { circle: t[0], label: t[1], hex: t[2] };
+        }
+
+        // Tên mode hiển thị dạng "Vanilla", "TNT Cart"... trong tooltip
+        function prettyModeName(name) {
+            return String(name).split(' ').map(w => (['SMP', 'UHC', 'TNT', 'AXE'].includes(w) ? w : w.charAt(0) + w.slice(1).toLowerCase())).join(' ');
+        }
+
+        // Huy hiệu tier (viền tròn như bản gốc, mode chưa test = viền tròn đứt)
+        // withTip = true -> hiện tooltip "Vanilla · LT1 / 800 points" khi di chuột (dùng trong bảng profile)
+        function tierBadgeHtml(mode, tierVal, extraClass = '', withTip = false) {
+            const mName = prettyModeName(mode.name);
+            const tipHtml = !withTip ? '' : `
+                <div class="tier-tip">
+                    <div class="tip-title">${mName}${tierVal ? ' · ' + tierVal : ''}</div>
+                    <div class="tip-sub">${tierVal ? (TIER_POINTS[tierVal] || 0) + ' points' : 'Chưa có tier'}</div>
+                </div>`;
+            const hostClass = withTip ? 'tier-tip-host' : '';
+            const titleAttr = withTip ? '' : `title="${tierVal ? mode.name + ': ' + tierVal : mode.name}"`;
+
+            if (!tierVal) {
+                return `
+                    <div class="${hostClass} flex flex-col items-center gap-1.5 flex-shrink-0 opacity-85 ${extraClass}" ${titleAttr}>
+                        <div class="w-10 h-10 rounded-full tier-circle-empty flex items-center justify-center">
+                            <img src="${mode.icon}" class="w-5 h-5 object-contain opacity-55" alt="${mode.name}">
+                        </div>
+                        <span class="tier-label-empty text-xs font-black px-2 py-0.5 rounded leading-none">-</span>
+                        ${tipHtml}
+                    </div>`;
+            }
+            const tClass = getTierClass(tierVal);
+            return `
+                <div class="${hostClass} flex flex-col items-center gap-1.5 flex-shrink-0 ${extraClass}" ${titleAttr}>
+                    <div class="w-10 h-10 rounded-full ${tClass.circle} flex items-center justify-center shadow-sm">
+                        <img src="${mode.icon}" class="w-5 h-5 object-contain" alt="${mode.name}">
+                    </div>
+                    <span class="${tClass.label} text-xs font-black px-2 py-0.5 rounded leading-none tracking-tight shadow-sm">${tierVal}</span>
+                    ${tipHtml}
+                </div>`;
+        }
+
+        function renderLeaderboard() {
+            const overallContent = document.getElementById('overallLeaderboardContent');
+            const modeColumnsContent = document.getElementById('modeTierColumnsContent');
+            const emptyState = document.getElementById('emptyState');
+
+            const rankMap = {};
+            [...players].sort((a, b) => b.points - a.points).forEach((p, i) => { rankMap[p.username] = i + 1; });
+            let filtered = players.filter(p => p.username.toLowerCase().includes(searchQuery.toLowerCase()) && (regionFilter === 'ALL' || p.region === regionFilter));
+
+            if (activeTab === 'overall') {
+                overallContent.classList.remove('hidden');
+                modeColumnsContent.classList.add('hidden');
+
+                filtered.sort((a, b) => (sortByRegion ? a.region.localeCompare(b.region) : 0) || b.points - a.points);
+                const container = document.getElementById('leaderboardBody');
+
+                if (filtered.length === 0) {
+                    container.innerHTML = '';
+                    emptyState.classList.remove('hidden');
+                    return;
+                } else {
+                    emptyState.classList.add('hidden');
+                }
+
+                container.innerHTML = filtered.map((player) => {
+                    const rank = rankMap[player.username] || 1;
+                    const skinUrl = `https://vzge.me/bust/220/${player.username}`;
+                    const title = getCombatTitle(player.points);
+                    const nameColor = ({ 1: '#facc15', 2: '#f9a8d4', 3: '#fda4af' })[rank] || '#ffffff';
+
+                    const badgesHtml = modes.filter(m => m.id !== 'overall').map(mode => tierBadgeHtml(mode, player.tiers ? player.tiers[mode.id] : null, 'min-w-[50px]')).join('');
+
+                    return `
+                        <div class="player-row lb-grid row-r${rank <= 3 ? rank : 0} flex flex-row items-center pr-3.5" onclick="openPlayerModal('${player.username}')">
+                            <div class="rank-panel">
+                                <img src="${skinUrl}" alt="${player.username}" onerror="this.src='https://vzge.me/bust/220/Steve'">
+                                <span class="rank-num">${rank}</span>
+                            </div>
+                            <div class="min-w-0 py-3 pl-1">
+                                <div class="font-extrabold text-lg sm:text-xl truncate" style="color:${nameColor}">${player.username}</div>
+                                <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1.5">
+                                    <span class="title-badge" style="color:${title.color};background:${title.bg}"><i class="fa-solid fa-gem"></i>${title.name}</span>
+                                    <span class="row-title-points text-sm font-semibold text-slate-400 whitespace-nowrap">${player.points} Points</span>
+                                </div>
+                            </div>
+                            <div class="lb-region flex flex-col items-center gap-1">
+                                <span class="region-pill">${player.region}</span>
+                                <i class="fa-solid fa-earth-asia text-[10px] text-slate-500"></i>
+                            </div>
+                            <!-- THANH NGANG VUỐT CHO HUY HIỆU TIER -->
+                            <div class="horizontal-scroll-container py-1">
+                                <div class="flex items-center gap-2.5 w-max mx-auto">${badgesHtml}</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onclick="event.stopPropagation(); deletePlayer('${player.id}', '${player.username}')" class="text-slate-400 hover:text-rose-400 p-1.5 transition-colors text-sm" title="Xóa player"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } else {
+                overallContent.classList.add('hidden');
+                modeColumnsContent.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+
+                const tierColumnsGrid = document.getElementById('tierColumnsGrid');
+                
+                const tiersList = ['Tier 1', 'Tier 2', 'Tier 3', 'Tier 4', 'Tier 5'];
+                const tierKeys = { 'Tier 1': ['HT1', 'LT1'], 'Tier 2': ['HT2', 'LT2'], 'Tier 3': ['HT3', 'LT3'], 'Tier 4': ['HT4', 'LT4'], 'Tier 5': ['HT5', 'LT5'] };
+                
+                const headerStyles = {
+                    'Tier 1': 'bg-[#6b4a05] text-amber-400',
+                    'Tier 2': 'bg-[#3d4452] text-slate-300',
+                    'Tier 3': 'bg-[#5c3828] text-orange-400',
+                    'Tier 4': 'bg-[#241824] text-slate-300',
+                    'Tier 5': 'bg-[#241824] text-slate-300'
+                };
+
+                const tierHeaderIcons = {
+                    'Tier 1': 'https://i.ibb.co/mVXCSfp6/tier-1.webp',
+                    'Tier 2': 'https://i.ibb.co/VcvFyQMJ/tier-2.webp',
+                    'Tier 3': 'https://i.ibb.co/W4MB7hdw/tier-3.webp'
+                };
+
+                tierColumnsGrid.innerHTML = tiersList.map((tierName, i) => {
+                    const validKeys = tierKeys[tierName];
+                    const matchedPlayers = filtered.filter(p => p.tiers && p.tiers[activeTab] && validKeys.includes(p.tiers[activeTab]));
+
+                    const playerRowsHtml = matchedPlayers.map(p => {
+                        const avatarUrl = p.avatarUrl || `https://vzge.me/bust/220/${p.username}.png`;
+                        return `
+                            <div class="tier-col-card flex flex-row items-center justify-between px-3.5 py-2.5 cursor-pointer group" onclick="openPlayerModal('${p.username}')">
+                                <div class="flex flex-row items-center gap-2.5 min-w-0">
+                                    <img src="${avatarUrl}" class="w-11 h-11 object-contain flex-shrink-0" alt="${p.username}" onerror="this.src='https://vzge.me/bust/220/Steve.png'">
+                                    <span class="font-bold text-white text-sm truncate group-hover:text-fuchsia-300 transition-colors">${p.username}</span>
+                                </div>
+                                <i class="fa-solid fa-angles-up text-xs text-slate-400 group-hover:text-fuchsia-400 transition-colors flex-shrink-0 pl-1"></i>
+                            </div>
+                        `;
+                    }).join('');
+
+                    const trophyIcon = tierHeaderIcons[tierName]
+                        ? `<img src="${tierHeaderIcons[tierName]}" class="w-6 h-6 object-contain" alt="${tierName}">`
+                        : '';
+
+                    const radius = i === 0 ? 'rounded-tl-xl' : (i === tiersList.length - 1 ? 'rounded-tr-xl' : '');
+                    const bodyBorder = 'bg-[#0c0614] ' + (i === 0 ? 'rounded-bl-xl' : (i === tiersList.length - 1 ? 'rounded-br-xl' : ''));
+
+                    return `
+                        <div class="flex flex-col min-w-0">
+                            <div class="${headerStyles[tierName]} ${radius} py-3 px-4 flex items-center justify-center gap-2 font-extrabold text-lg">
+                                ${trophyIcon} ${tierName}
+                            </div>
+                            <div class="pt-3 pb-3 px-2.5 flex flex-col gap-3 min-h-[460px] ${bodyBorder}">
+                                ${playerRowsHtml}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function openPlayerModal(username) {
+            const player = players.find(p => p.username === username);
+            if (!player) return;
+
+            const sortedByPoints = [...players].sort((a, b) => b.points - a.points);
+            const rankIdx = sortedByPoints.findIndex(p => p.username === username) + 1;
+            const title = getCombatTitle(player.points);
+
+            document.getElementById('modalUsername').innerText = player.username;
+            document.getElementById('modalRegion').innerText = player.region;
+            const titleEl = document.getElementById('modalTitle');
+            titleEl.style.color = title.color;
+            titleEl.style.background = title.bg;
+            titleEl.innerHTML = `<i class="fa-solid fa-gem"></i>${title.name}`;
+            const skinEl = document.getElementById('modalSkinImg');
+            skinEl.onerror = () => { skinEl.onerror = null; skinEl.src = `https://vzge.me/bust/300/Steve`; };
+            skinEl.src = `https://vzge.me/bust/300/${player.username}`;
+            document.getElementById('modalRankNum').innerText = `${rankIdx}.`;
+            document.getElementById('modalPoints').innerText = `(${player.points} points)`;
+
+            const rankBg = ({
+                1: 'linear-gradient(135deg, #f5c542, #dfa224)',
+                2: 'linear-gradient(135deg, #8fb3c2, #5f8294)',
+                3: 'linear-gradient(135deg, #db7a2c, #b85c14)'
+            })[rankIdx] || '#241238';
+            document.getElementById('modalRankBox').style.background = rankBg;
+            const rankAccent = ({
+                1: { border: 'rgba(234,179,8,.6)', icon: '#facc15' },
+                2: { border: 'rgba(143,179,194,.6)', icon: '#a9c4d0' },
+                3: { border: 'rgba(219,122,44,.6)', icon: '#fb923c' }
+            })[rankIdx] || { border: 'rgba(217,70,239,.55)', icon: '#e879f9' };
+            document.getElementById('modalRankBar').style.borderColor = rankAccent.border;
+            document.getElementById('modalTrophy').style.color = rankAccent.icon;
+
+            document.getElementById('modalTiersContainer').innerHTML = modes
+                .filter(m => m.id !== 'overall')
+                .map(mode => tierBadgeHtml(mode, player.tiers ? player.tiers[mode.id] : null, '', true))
+                .join('');
+
+            document.getElementById('playerModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('playerModal').classList.add('hidden');
+        }
+
+        function copyProfileLink() {
+            navigator.clipboard.writeText(window.location.href);
+        }
+
+        function renderTierlistMaker() {
+            const board = document.getElementById('tierlistBoard');
+            const pool = document.getElementById('unassignedPool');
+            const currentMode = activeTab === 'overall' ? 'Sword' : activeTab;
+
+            board.innerHTML = TIER_RANKS.map(rank => {
+                let headerColor = 'bg-[#1d1030]/80 text-fuchsia-300';
+                if (rank.endsWith('1') || rank.endsWith('3')) headerColor = 'bg-amber-950/40 text-amber-300';
+                else if (rank.endsWith('4')) headerColor = 'bg-green-950/40 text-green-300';
+                else if (rank.endsWith('5')) headerColor = 'bg-[#1d1030]/70 text-white';
+
+                return `
+                    <div class="tier-row flex rounded-lg overflow-hidden min-h-[75px] bg-[#0f0716]/70 transition-colors"
+                         ondragover="allowDrop(event)" ondragleave="clearDragHover(event)" ondrop="handleDrop(event, '${rank}')">
+                        <div class="w-28 flex-shrink-0 flex items-center justify-center font-black text-sm ${headerColor}">${rank}</div>
+                        <div class="flex-1 p-3 flex flex-wrap gap-2.5 items-center" id="tier_container_${rank}">
+                            ${renderTierPlayerCards(currentMode, rank)}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const unassigned = players.filter(p => !p.tiers || !p.tiers[currentMode]);
+            pool.innerHTML = unassigned.map(p => createDragCardHtml(p)).join('');
+        }
+
+        function renderTierPlayerCards(mode, rank) {
+            const assigned = players.players ? [] : players.filter(p => p.tiers && p.tiers[mode] === rank);
+            return assigned.map(p => createDragCardHtml(p)).join('');
+        }
+
+        function createDragCardHtml(player) {
+            const skinUrl = `https://vzge.me/bust/220/${player.username}`;
+            return `
+                <div draggable="true" ondragstart="handleDragStart(event, '${player.username}')" 
+                     class="drag-item bg-[#1d1030] hover:border-fuchsia-400 p-1.5 rounded-lg flex items-center space-x-2 cursor-grab active:cursor-grabbing shadow-sm transition-all hover:scale-105">
+                    <img src="${skinUrl}" class="w-8 h-8 object-contain">
+                    <span class="text-xs font-bold text-slate-200 pr-1">${player.username}</span>
+                </div>
+            `;
+        }
+
+        let draggedUsername = null;
+        function handleDragStart(e, username) {
+            draggedUsername = username;
+            e.dataTransfer.setData('text/plain', username);
+        }
+
+        function allowDrop(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+        function clearDragHover(e) { e.currentTarget.classList.remove('drag-over'); }
+
+        async function handleDrop(e, targetRank) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (!draggedUsername) return;
+
+            const mode = activeTab === 'overall' ? 'Sword' : activeTab;
+            const player = players.find(p => p.username === draggedUsername);
+            
+            if (player) {
+                if (!player.tiers) player.tiers = {};
+                player.tiers[mode] = targetRank;
+                player.points = calculatePlayerPoints(player.tiers);
+                
+                try {
+                    await databases.updateDocument(
+                        DATABASE_ID,
+                        COLLECTION_ID,
+                        player.id,
+                        { tiers: JSON.stringify(player.tiers) }
+                    );
+                } catch (err) {
+                    console.error("Lỗi cập nhật Appwrite:", err);
+                }
+
+                renderLeaderboard();
+            }
+        }
+
+        function setupSearchListener() {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    searchQuery = e.target.value.trim();
+                    renderLeaderboard();
+                });
+            }
+        }
+
+        async function deletePlayer(docId, username) {
+            if (confirm(`Bạn có chắc muốn xóa ${username}?`)) {
+                try {
+                    await databases.deleteDocument(DATABASE_ID, COLLECTION_ID, docId);
+                    players = players.filter(p => p.username !== username);
+                    renderLeaderboard();
+                } catch (err) {
+                    console.error("Không thể xóa người chơi:", err);
+                }
+            }
+        }
+
+        function exportTierlistImage() {
+            const board = document.getElementById('tierlistBoard');
+            html2canvas(board, { backgroundColor: '#06030b', scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `DENNIS_Tierlist_${activeTab.toUpperCase()}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+            renderRegionChips();
+    </script>
+</body>
+</html>
