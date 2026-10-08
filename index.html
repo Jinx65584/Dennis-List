@@ -1029,7 +1029,7 @@
                     const rank = rankMap[player.username] || 1;
                     const skinUrl = `https://vzge.me/bust/220/${player.username}`;
                     const title = getCombatTitle(player.points);
-                    const nameColor = ({ 1: '#facc15', 2: '#f9a8d4', 3: '#fda4af' })[rank] || '#ffffff';
+                    const nameColor = ({ 1: '#facc15', 2: '#cbd5e1', 3: '#d48f54' })[rank] || '#ffffff';
 
                     const badgesHtml = getSortedModesForPlayer(player).map(mode => tierBadgeHtml(mode, player.tiers ? player.tiers[mode.id] : null, 'min-w-[50px]')).join('');
 
