@@ -988,6 +988,19 @@
                 </div>`;
         }
 
+        // Sắp xếp mode theo tier cao -> thấp (mode chưa test xuống cuối, giữ thứ tự gốc)
+        function getSortedModesForPlayer(player) {
+            const list = modes.filter(m => m.id !== 'overall');
+            const pts = m => {
+                const t = player && player.tiers ? player.tiers[m.id] : null;
+                return t && TIER_POINTS[t] ? TIER_POINTS[t] : 0;
+            };
+            return list
+                .map((m, i) => ({ m, i, p: pts(m) }))
+                .sort((a, b) => (b.p - a.p) || (a.i - b.i))
+                .map(x => x.m);
+        }
+
         function renderLeaderboard() {
             const overallContent = document.getElementById('overallLeaderboardContent');
             const modeColumnsContent = document.getElementById('modeTierColumnsContent');
@@ -1018,7 +1031,7 @@
                     const title = getCombatTitle(player.points);
                     const nameColor = ({ 1: '#facc15', 2: '#f9a8d4', 3: '#fda4af' })[rank] || '#ffffff';
 
-                    const badgesHtml = modes.filter(m => m.id !== 'overall').map(mode => tierBadgeHtml(mode, player.tiers ? player.tiers[mode.id] : null, 'min-w-[50px]')).join('');
+                    const badgesHtml = getSortedModesForPlayer(player).map(mode => tierBadgeHtml(mode, player.tiers ? player.tiers[mode.id] : null, 'min-w-[50px]')).join('');
 
                     return `
                         <div class="player-row lb-grid row-r${rank <= 3 ? rank : 0} flex flex-row items-center pr-3.5" onclick="openPlayerModal('${player.username}')">
@@ -1146,8 +1159,7 @@
             document.getElementById('modalRankBar').style.borderColor = rankAccent.border;
             document.getElementById('modalTrophy').style.color = rankAccent.icon;
 
-            document.getElementById('modalTiersContainer').innerHTML = modes
-                .filter(m => m.id !== 'overall')
+            document.getElementById('modalTiersContainer').innerHTML = getSortedModesForPlayer(player)
                 .map(mode => tierBadgeHtml(mode, player.tiers ? player.tiers[mode.id] : null, '', true))
                 .join('');
 
