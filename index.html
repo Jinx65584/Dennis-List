@@ -298,7 +298,7 @@
         .row-r2 { border-color: rgba(226,232,240,.5); }
         .row-r3 { border-color: rgba(251,146,60,.5); }
         .title-badge { display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:8px; font-size:10.5px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; white-space:nowrap; }
-        .region-pill { background:linear-gradient(135deg,#c026d3,#7e22ce); color:#fff; font-weight:800; font-size:13px; padding:6px 12px; border-radius:10px; }
+        .region-pill { background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; font-weight:800; font-size:13px; padding:6px 12px; border-radius:10px; }
         @media (max-width: 639px) {
             .lb-grid { grid-template-columns: 84px minmax(90px, 1fr) minmax(0, 1fr) 28px; column-gap: 8px; }
             .lb-region { display: none !important; }
@@ -314,9 +314,60 @@
         .text-gray-400 { color: #bfaedb !important; }
         .border-gray-800, .border-gray-800\/80 { border-color: rgba(168,85,247,.25) !important; }
         input::placeholder { color: #8d7aae !important; }
+
+        /* ===== MÀN HÌNH CHÀO (SPLASH) ===== */
+        body.splash-lock { overflow: hidden; }
+        #splash {
+            position: fixed; inset: 0; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: #06030b;
+            transition: opacity .7s ease, visibility .7s ease, transform .7s cubic-bezier(.4,0,.2,1);
+        }
+        #splash.splash-out { opacity: 0; visibility: hidden; transform: scale(1.06); pointer-events: none; }
+        #splash::before {
+            content: ''; position: absolute; width: 620px; height: 620px; max-width: 120vw; max-height: 120vw; border-radius: 50%;
+            background: radial-gradient(circle, rgba(217,70,239,.30) 0%, rgba(168,85,247,.10) 40%, transparent 68%);
+            animation: splashGlow 2.4s ease-in-out infinite;
+        }
+        .splash-logo {
+            position: relative; width: auto; height: auto; max-width: min(560px, 82vw); max-height: 150px; object-fit: contain;
+            filter: drop-shadow(0 0 22px rgba(217,70,239,.55));
+            opacity: 0; transform: scale(.6);
+            animation: splashLogoIn .8s cubic-bezier(.2,.9,.3,1.2) .15s forwards;
+        }
+        .splash-title {
+            position: relative; margin-top: 26px; font-weight: 800; color: #fff;
+            font-size: clamp(20px, 3.4vw, 32px); letter-spacing: .38em; padding-left: .38em; white-space: nowrap;
+            opacity: 0; transform: translateY(12px);
+            animation: splashFadeUp .7s ease .55s forwards;
+        }
+        .splash-line {
+            position: relative; margin-top: 18px; height: 2px; width: 0; border-radius: 2px;
+            background: linear-gradient(90deg, transparent, #ff5ce1, transparent);
+            box-shadow: 0 0 10px rgba(255,92,225,.7);
+            animation: splashLine .9s cubic-bezier(.4,0,.2,1) .95s forwards;
+        }
+        @keyframes splashLogoIn { to { opacity: 1; transform: scale(1); } }
+        @keyframes splashFadeUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes splashLine { to { width: 150px; } }
+        @keyframes splashGlow { 0%,100% { opacity: .65; transform: scale(.95); } 50% { opacity: 1; transform: scale(1.05); } }
+
+        /* Nội dung chính hiện ra sau khi splash tắt */
+        .page-enter nav, .page-enter main, .page-enter footer { animation: pageReveal .8s cubic-bezier(.2,.8,.2,1) both; }
+        .page-enter main { animation-delay: .08s; }
+        .page-enter footer { animation-delay: .16s; }
+        @keyframes pageReveal { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-fuchsia-500 selection:text-white">
+<body class="min-h-screen flex flex-col antialiased selection:bg-fuchsia-500 selection:text-white splash-lock">
+
+    <!-- SPLASH SCREEN -->
+    <div id="splash">
+        <!-- TODO: đổi SPLASH_LOGO_URL trong script bên dưới thành link ảnh logo của bạn -->
+        <img id="splashLogo" class="splash-logo" alt="Logo">
+        <div class="splash-title">DENNIS LIST</div>
+        <div class="splash-line"></div>
+    </div>
 
     <!-- Navigation Bar -->
     <nav class="w-full sticky top-0 z-50 px-4 sm:px-6 pt-4 pb-1 pointer-events-none">
@@ -324,7 +375,7 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center space-x-8">
                     <a href="#" class="flex items-center space-x-3 group">
-                        <img src="https://i.ibb.co/q3SQv1Xw/minecraft-title.webp" alt="DENNIS TIER" class="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-200 drop-shadow-[0_2px_10px_rgba(255,92,225,0.5)]" onerror="this.onerror=null; this.src='https://api.iconify.design/twemoji:sword.svg';">
+                        <img src="https://i.ibb.co/MDKf0F3Z/minecraft-title.png" alt="DENNIS LIST" class="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-200 drop-shadow-[0_2px_10px_rgba(255,92,225,0.5)]" onerror="this.onerror=null; this.src='https://api.iconify.design/twemoji:sword.svg';">
                     </a>
                     
                     <div class="hidden md:flex items-center space-x-8">
@@ -505,6 +556,34 @@
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1"></script>
 
     <script>
+        // ===== SPLASH SCREEN =====
+        const SPLASH_LOGO_URL = 'https://i.ibb.co/MDKf0F3Z/minecraft-title.png'; // link ảnh logo splash — đổi ở ĐÂY (không phải trong thẻ <img>)
+        const SPLASH_MIN_MS = 2200; // thời gian tối thiểu hiển thị splash (ms)
+        (function () {
+            const splash = document.getElementById('splash');
+            const logo = document.getElementById('splashLogo');
+            if (logo) {
+                logo.src = SPLASH_LOGO_URL;
+                logo.onerror = () => { logo.style.display = 'none'; };
+            }
+            const start = Date.now();
+            let done = false;
+            function hideSplash() {
+                if (done) return;
+                done = true;
+                splash.classList.add('splash-out');
+                document.body.classList.add('page-enter');
+                document.body.classList.remove('splash-lock');
+                setTimeout(() => { splash.remove(); document.body.classList.remove('page-enter'); }, 1600);
+            }
+            function scheduleHide() {
+                setTimeout(hideSplash, Math.max(0, SPLASH_MIN_MS - (Date.now() - start)));
+            }
+            if (document.readyState === 'complete') scheduleHide();
+            else window.addEventListener('load', scheduleHide);
+            setTimeout(hideSplash, 6000); // phòng khi tải chậm
+        })();
+
         const { Client, Databases, Account, Avatars, Query } = Appwrite;
         
         const client = new Client()
@@ -532,14 +611,20 @@
 
         // Ngưỡng điểm cho danh hiệu — chỉnh tại đây
         const COMBAT_TITLES = [
-            { min: 250, name: 'Combat Grandmaster', color: '#facc15', bg: 'rgba(250,204,21,.12)' },
-            { min: 180, name: 'Combat Master', color: '#fb923c', bg: 'rgba(251,146,60,.12)' },
-            { min: 120, name: 'Combat Ace', color: '#f472b6', bg: 'rgba(244,114,182,.12)' },
-            { min: 70, name: 'Combat Specialist', color: '#c4b5fd', bg: 'rgba(196,181,253,.12)' },
-            { min: 30, name: 'Combat Cadet', color: '#7dd3fc', bg: 'rgba(125,211,252,.12)' },
-            { min: 10, name: 'Combat Novice', color: '#cbd5e1', bg: 'rgba(203,213,225,.10)' },
-            { min: 0, name: 'Rookie', color: '#94a3b8', bg: 'rgba(148,163,184,.10)' }
+            { min: 250, name: 'Combat Grandmaster', color: '#facc15', bg: 'rgba(250,204,21,.12)', icon: 'https://i.ibb.co/gZLT83ks/combat-grandmaster.webp' }, // TODO: dán URL ảnh icon vào icon
+            { min: 180, name: 'Combat Master', color: '#fb923c', bg: 'rgba(251,146,60,.12)', icon: 'https://i.ibb.co/7dfbFt5H/combat-master.webp' },      // TODO: dán URL ảnh icon vào icon
+            { min: 120, name: 'Combat Ace', color: '#f472b6', bg: 'rgba(244,114,182,.12)', icon: 'https://i.ibb.co/FSyG4YC/ace.webp' },        // TODO: dán URL ảnh icon vào icon
+            { min: 70, name: 'Combat Specialist', color: '#c4b5fd', bg: 'rgba(196,181,253,.12)', icon: 'https://i.ibb.co/h1nHPbXQ/combat-specialist.webp' }, // TODO: dán URL ảnh icon vào icon
+            { min: 30, name: 'Combat Cadet', color: '#7dd3fc', bg: 'rgba(125,211,252,.12)', icon: 'https://i.ibb.co/j91wtrfS/combat-cadet.webp' },      // TODO: dán URL ảnh icon vào icon
+            { min: 10, name: 'Combat Novice', color: '#cbd5e1', bg: 'rgba(203,213,225,.10)', icon: 'https://i.ibb.co/bRJZQtqQ/combat-novice.webp' },     // TODO: dán URL ảnh icon vào icon
+            { min: 0, name: 'Rookie', color: '#94a3b8', bg: 'rgba(148,163,184,.10)', icon: 'https://i.ibb.co/YBLD6Xpv/rookie.webp' }              // TODO: dán URL ảnh icon vào icon
         ];
+        // Trả về <img> nếu có URL icon, nếu để trống thì dùng icon viên ngọc mặc định
+        function titleIconHtml(t) {
+            return t.icon
+                ? `<img src="${t.icon}" alt="" class="w-4 h-4 object-contain flex-shrink-0" onerror="this.outerHTML='<i class=&quot;fa-solid fa-gem&quot;></i>'">`
+                : `<i class="fa-solid fa-gem"></i>`;
+        }
         function getCombatTitle(points) {
             return COMBAT_TITLES.find(t => points >= t.min) || COMBAT_TITLES[COMBAT_TITLES.length - 1];
         }
@@ -559,7 +644,7 @@
                 `<div class="rounded-lg bg-white/5 py-2 text-center"><div class="text-xs font-black text-fuchsia-300">${k}</div><div class="text-sm font-bold text-white">${v}</div></div>`
             ).join('');
             document.getElementById('infoTitles').innerHTML = COMBAT_TITLES.map(t =>
-                `<div class="flex items-center justify-between"><span class="title-badge" style="color:${t.color};background:${t.bg}"><i class="fa-solid fa-gem"></i>${t.name}</span><span class="text-xs font-semibold text-slate-400">từ ${t.min} điểm</span></div>`
+                `<div class="flex items-center justify-between"><span class="title-badge" style="color:${t.color};background:${t.bg}">${titleIconHtml(t)}${t.name}</span><span class="text-xs font-semibold text-slate-400">từ ${t.min} điểm</span></div>`
             ).join('');
             document.getElementById('infoModal').classList.remove('hidden');
         }
@@ -1042,7 +1127,7 @@
                             <div class="min-w-0 py-3 pl-1">
                                 <div class="font-extrabold text-lg sm:text-xl truncate" style="color:${nameColor}">${player.username}</div>
                                 <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1.5">
-                                    <span class="title-badge" style="color:${title.color};background:${title.bg}"><i class="fa-solid fa-gem"></i>${title.name}</span>
+                                    <span class="title-badge" style="color:${title.color};background:${title.bg}">${titleIconHtml(title)}${title.name}</span>
                                     <span class="row-title-points text-sm font-semibold text-slate-400 whitespace-nowrap">${player.points} Points</span>
                                 </div>
                             </div>
@@ -1138,7 +1223,7 @@
             const titleEl = document.getElementById('modalTitle');
             titleEl.style.color = title.color;
             titleEl.style.background = title.bg;
-            titleEl.innerHTML = `<i class="fa-solid fa-gem"></i>${title.name}`;
+            titleEl.innerHTML = `${titleIconHtml(title)}${title.name}`;
             const skinEl = document.getElementById('modalSkinImg');
             skinEl.onerror = () => { skinEl.onerror = null; skinEl.src = `https://vzge.me/bust/300/Steve`; };
             skinEl.src = `https://vzge.me/bust/300/${player.username}`;
