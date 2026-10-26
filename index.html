@@ -357,6 +357,88 @@
         .page-enter main { animation-delay: .08s; }
         .page-enter footer { animation-delay: .16s; }
         @keyframes pageReveal { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ===== SẢNH (HOME) + CHUYỂN TRANG MƯỢT ===== */
+        #pageProgress{position:fixed;top:0;left:0;right:0;height:3px;z-index:10000;transform-origin:left center;transform:scaleX(0);opacity:0;background:linear-gradient(90deg,#a855f7,#ff5ce1,#fbbf24);box-shadow:0 0 12px rgba(255,92,225,.8);pointer-events:none}
+        .sec{scroll-margin-top:96px}
+        .glass-card{background:rgba(18,11,28,.82);border:1px solid rgba(168,85,247,.22);border-radius:1.5rem;box-shadow:0 20px 60px rgba(0,0,0,.45);backdrop-filter:blur(8px)}
+        .home-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;font-size:12px;font-weight:800;color:#f1e8fb;background:rgba(255,255,255,.04);border:1px solid rgba(168,85,247,.28)}
+        .home-badge .dot{width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;animation:dotPulse 1.8s ease-in-out infinite}
+        .grad-text{background:linear-gradient(90deg,#ff7ae8 0%,#ff9a6b 55%,#fbbf24 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+        .hero-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 24px;border-radius:16px;font-weight:800;font-size:16px;color:#fff;background:rgba(20,12,30,.85);border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.35);transition:transform .25s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .25s}
+        .hero-btn:hover{transform:translateY(-3px);border-color:rgba(217,70,239,.6);box-shadow:0 14px 34px rgba(217,70,239,.25)}
+        .hero-btn img{width:20px;height:20px;object-fit:contain}
+        .live-tag{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.18em;color:#9885b8}
+        .live-dot{width:7px;height:7px;border-radius:50%;background:#f87171;box-shadow:0 0 8px #f87171;animation:dotPulse 1.4s ease-in-out infinite}
+        .mode-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 8px;border-radius:999px;font-size:12px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#fff;transition:border-color .25s,transform .25s}
+        .mode-pill:hover{border-color:rgba(217,70,239,.7);transform:translateY(-1px)}
+        .mode-pill img{width:22px;height:22px;object-fit:contain}
+        .top-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:16px;background:rgba(10,6,18,.75);border:1px solid rgba(255,255,255,.05);cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1),border-color .25s,background .25s}
+        .top-row:hover{transform:translateX(5px);border-color:rgba(217,70,239,.5);background:rgba(28,15,43,.9)}
+        .top-row .rk{font-weight:800;font-size:13px;color:#e9ddf7;min-width:24px}
+        .top-row img.sk{width:46px;height:52px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))}
+        .top-row .nm{font-weight:800;font-size:17px;color:#fff}
+        .top-row .pt{font-size:12px;font-weight:600;color:#9885b8}
+        .top-row.t1{border-color:rgba(234,179,8,.45);box-shadow:0 0 22px rgba(234,179,8,.10)}
+        .row-in{animation:rowIn .5s cubic-bezier(.2,.8,.2,1) both}
+        @keyframes rowIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+        .skel{height:72px;border-radius:16px;background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.09),rgba(255,255,255,.04));background-size:200% 100%;animation:shimmer 1.4s linear infinite}
+        @keyframes shimmer{to{background-position:-200% 0}}
+        .home-mode{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid transparent;font-size:11px;font-weight:800;letter-spacing:.04em;color:#bfaedb;transition:background .25s,border-color .25s,color .25s,transform .25s}
+        .home-mode img{width:28px;height:28px;object-fit:contain;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+        .home-mode:hover{background:rgba(217,70,239,.10);color:#fff}
+        .home-mode:hover img{transform:scale(1.15) translateY(-2px)}
+        .home-mode.active{background:rgba(217,70,239,.16);border-color:rgba(217,70,239,.6);color:#ff9df0}
+        .float-deco{position:absolute;z-index:20;pointer-events:none;animation:floaty 5s ease-in-out infinite;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
+        .float-deco{width:44px;height:44px;z-index:2}
+        .fd-l{left:-54px;top:70px;animation-delay:-3s}   /* nằm hẳn bên ngoài card, phía trái */
+        .fd-tr{top:44px;right:-22px;width:50px;height:50px;animation-delay:-1.2s}   /* đè lên góc phải trên */
+        .fd-b{bottom:-22px;right:84px;animation-delay:-2.5s}   /* treo dưới mép card */
+        @keyframes floaty{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-12px) rotate(6deg)}}
+        @keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.35}}
+        @keyframes fadeIn{to{opacity:1}}
+        /* biểu đồ tier: chỉ chạy khi trang chủ có class .play */
+        .chart-line{stroke-dasharray:1;stroke-dashoffset:1}
+        .chart-dot{transform-box:fill-box;transform-origin:center;opacity:0;transform:scale(0)}
+        .chart-lbl{opacity:0}
+        .play .chart-line{animation:drawLine 1.6s cubic-bezier(.4,0,.2,1) .5s forwards}
+        .play .chart-dot{animation:dotPop .5s cubic-bezier(.2,.9,.3,1.4) forwards}
+        .play .chart-lbl{animation:fadeIn .5s ease forwards}
+        /* phát sáng nhịp thở cho từng điểm (bắt đầu sau khi điểm hiện ra) */
+        .chart-dot{--c:#fff}
+        .chart-halo{transform-box:fill-box;transform-origin:center;opacity:0;fill:var(--c);pointer-events:none}
+        .play .chart-dot{animation:dotPop .5s cubic-bezier(.2,.9,.3,1.4) forwards,dotGlow 2.6s ease-in-out infinite;animation-delay:var(--pd,0s),calc(var(--pd,0s) + .6s)}
+        .play .chart-halo{animation:haloPulse 2.6s ease-out infinite;animation-delay:calc(var(--pd,0s) + .6s)}
+        .play .chart-line{filter:drop-shadow(0 0 2px rgba(252,215,122,.18));animation:drawLine 1.6s cubic-bezier(.4,0,.2,1) .5s forwards,lineGlow 2.6s ease-in-out 2.1s infinite}
+        @keyframes dotGlow{0%,100%{filter:drop-shadow(0 0 1px var(--c))}50%{filter:drop-shadow(0 0 4px var(--c))}}
+        @keyframes haloPulse{0%{opacity:.22;transform:scale(1)}70%,100%{opacity:0;transform:scale(2.6)}}
+        @keyframes lineGlow{0%,100%{filter:drop-shadow(0 0 1px rgba(252,215,122,.12))}50%{filter:drop-shadow(0 0 3px rgba(252,215,122,.3))}}
+        @media (prefers-reduced-motion:reduce){.play .chart-dot,.play .chart-halo,.play .chart-line{animation-iteration-count:1}}
+        @keyframes drawLine{to{stroke-dashoffset:0}}
+        @keyframes dotPop{to{opacity:1;transform:scale(1)}}
+        /* quy trình test */
+        .step-card{position:relative;height:100%;padding:22px;border-radius:20px;background:rgba(18,11,28,.75);border:1px solid rgba(168,85,247,.2);transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s}
+        .step-card:hover{transform:translateY(-6px);border-color:rgba(217,70,239,.55);box-shadow:0 18px 40px rgba(217,70,239,.15)}
+        .step-no{font-size:12px;font-weight:800;letter-spacing:.18em;color:#ff5ce1}
+        .step-ic{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(217,70,239,.14);border:1px solid rgba(217,70,239,.35);color:#ff9df0;font-size:18px;margin:14px 0}
+        /* faq */
+        .faq-item{border:1px solid rgba(168,85,247,.2);background:rgba(18,11,28,.7);border-radius:16px;overflow:hidden;transition:border-color .3s,background .3s}
+        .faq-item.open{border-color:rgba(217,70,239,.55);background:rgba(28,15,43,.8)}
+        .faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 22px;text-align:left;font-weight:800;color:#fff;font-size:15px}
+        .faq-q i{transition:transform .35s cubic-bezier(.2,.8,.2,1);color:#ff5ce1}
+        .faq-item.open .faq-q i{transform:rotate(180deg)}
+        .faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.2,.8,.2,1)}
+        .faq-item.open .faq-a{grid-template-rows:1fr}
+        .faq-a>div{overflow:hidden}
+        .faq-a p{padding:0 22px 20px;color:#bfaedb;font-size:14px;line-height:1.7}
+        .faq-a a,.faq-a button.lnk{color:#ff9df0;font-weight:700;text-decoration:underline}
+        /* hiện dần khi cuộn */
+        .sr{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0ms)}
+        .sr.in{opacity:1;transform:none}
+        @media (prefers-reduced-motion:reduce){.sr{opacity:1;transform:none;transition:none}}
+        /* menu mobile */
+        .m-nav{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 4px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#bfaedb;border-radius:12px;transition:color .25s,background .25s}
+        .m-nav.active{color:#fff;background:rgba(217,70,239,.16)}
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-fuchsia-500 selection:text-white splash-lock">
@@ -374,13 +456,19 @@
         <div class="max-w-[1360px] mx-auto pointer-events-auto rounded-2xl border border-white/10 bg-[#0f0716]/85 backdrop-blur-md px-4 sm:px-6 shadow-lg shadow-black/40">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center space-x-8">
-                    <a href="#" class="flex items-center space-x-3 group">
+                    <a href="#home" onclick="goPage('home'); return false;" class="flex items-center space-x-3 group">
                         <img src="https://i.ibb.co/MDKf0F3Z/minecraft-title.png" alt="DENNIS LIST" class="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-200 drop-shadow-[0_2px_10px_rgba(255,92,225,0.5)]" onerror="this.onerror=null; this.src='https://api.iconify.design/twemoji:sword.svg';">
                     </a>
                     
-                    <div class="hidden md:flex items-center space-x-8">
-                        <button onclick="switchMainView('leaderboard')" id="navBtnLeaderboard" class="nav-item active">
+                    <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
+                        <button onclick="goPage('board')" id="navBtnLeaderboard" class="nav-item">
                             <span class="nav-chip"><i class="fa-solid fa-list-ol"></i></span> Bảng Xếp Hạng
+                        </button>
+                        <button onclick="goPage('home',{section:'testSection'})" id="navBtnTest" class="nav-item">
+                            <span class="nav-chip"><i class="fa-solid fa-clipboard-list"></i></span> Quy Trình Test
+                        </button>
+                        <button onclick="goPage('home',{section:'faqSection'})" id="navBtnFaq" class="nav-item">
+                            <span class="nav-chip"><i class="fa-solid fa-circle-question"></i></span> FAQ
                         </button>
                         <a href="https://discord.gg/TCyJ39XSg" target="_blank" class="nav-item">
                             <span class="nav-chip"><i class="fa-brands fa-discord"></i></span> Discord
@@ -404,15 +492,136 @@
                     </div>
                 </div>
             </div>
+            <div class="md:hidden flex items-center gap-1 border-t border-white/10 py-1.5">
+                <button id="mNavHome" onclick="goPage('home')" class="m-nav"><i class="fa-solid fa-house"></i> Sảnh</button>
+                <button id="mNavBoard" onclick="goPage('board')" class="m-nav"><i class="fa-solid fa-list-ol"></i> BXH</button>
+                <button onclick="goPage('home',{section:'testSection'})" class="m-nav"><i class="fa-solid fa-clipboard-list"></i> Test</button>
+                <button onclick="goPage('home',{section:'faqSection'})" class="m-nav"><i class="fa-solid fa-circle-question"></i> FAQ</button>
+            </div>
         </div>
     </nav>
+    <div id="pageProgress"></div>
 
     <!-- Main Content Container -->
     <main class="flex-1 max-w-[1360px] w-full mx-auto px-4 sm:px-6 py-6 relative z-10">
-        
-        <div class="w-full">
+
+        <!-- ========== TRANG SẢNH (HOME) ========== -->
+        <div id="homeView" class="w-full play">
+            <section class="grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 items-start pt-4 sm:pt-10 pb-10">
+                <div class="flex flex-col min-w-0">
+                    <div data-reveal class="home-badge self-start"><span class="dot"></span> Cộng Đồng Minecraft PvP Việt Nam</div>
+                    <h1 data-reveal class="mt-6 text-[2.6rem] sm:text-6xl lg:text-[64px] font-extrabold leading-[1.05] tracking-tight text-white">
+                        Bảng Xếp Hạng<br>Minecraft<br><span class="grad-text">PvP Việt Nam</span>
+                    </h1>
+                    <p data-reveal class="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-slate-400">
+                        Gặp gỡ các người chơi Minecraft PvP hàng đầu tại Việt Nam, khám phá BXH ở các chế độ khác nhau và cũng như tham gia Test để được đánh giá trình độ của bạn.
+                    </p>
+                    <div data-reveal class="mt-8 flex flex-wrap gap-3">
+                        <button onclick="goPage('board')" class="hero-btn"><i class="fa-solid fa-trophy" style="color:#fbbf24"></i> Bảng Xếp Hạng</button>
+                        <a href="https://discord.gg/TCyJ39XSg" target="_blank" rel="noopener" class="hero-btn"><img src="https://cdn.discordapp.com/emojis/1549311745951010867.webp?size=48&quality=lossless" alt=""> Tham gia ngay!</a>
+                    </div>
+
+                    <!-- Hệ thống tier -->
+                    <div data-reveal class="glass-card mt-10 p-5 w-full max-w-[470px]">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <div class="text-[11px] font-extrabold tracking-[.16em] text-slate-500 uppercase">Hệ thống Tier</div>
+                                <div class="text-base font-extrabold text-white mt-1">Hành trình leo Rank</div>
+                            </div>
+                            <span class="text-[11px] font-bold text-slate-300 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">10 Cấp Bậc</span>
+                        </div>
+                        <svg viewBox="0 0 340 150" class="w-full mt-3" role="img" aria-label="Biểu đồ hệ thống tier">
+                            <defs>
+                                <linearGradient id="tierLine" x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset="0" stop-color="#b4bfcd"/><stop offset=".3" stop-color="#8fe9ae"/>
+                                    <stop offset=".55" stop-color="#e4b08a"/><stop offset=".8" stop-color="#d6e7fe"/><stop offset="1" stop-color="#fcd77a"/>
+                                </linearGradient>
+                            </defs>
+                            <g stroke="rgba(255,255,255,.07)" stroke-width="1">
+                                <line x1="0" y1="20" x2="340" y2="20"/><line x1="0" y1="50" x2="340" y2="50"/><line x1="0" y1="80" x2="340" y2="80"/><line x1="0" y1="110" x2="340" y2="110"/>
+                                <line x1="40" y1="0" x2="40" y2="150"/><line x1="100" y1="0" x2="100" y2="150"/><line x1="160" y1="0" x2="160" y2="150"/><line x1="220" y1="0" x2="220" y2="150"/><line x1="280" y1="0" x2="280" y2="150"/>
+                            </g>
+                            <path class="chart-line" pathLength="1" d="M30 112 L95 100 L170 86 L245 60 L308 40" fill="none" stroke="url(#tierLine)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle class="chart-halo" style="--c:#b4bfcd;--pd:.6s" cx="30" cy="112" r="5"/><circle class="chart-dot" style="--c:#b4bfcd;--pd:.6s" cx="30" cy="112" r="5" fill="#b4bfcd"/>
+                            <circle class="chart-halo" style="--c:#8fe9ae;--pd:.95s" cx="95" cy="100" r="5"/><circle class="chart-dot" style="--c:#8fe9ae;--pd:.95s" cx="95" cy="100" r="5" fill="#8fe9ae"/>
+                            <circle class="chart-halo" style="--c:#e4b08a;--pd:1.25s" cx="170" cy="86" r="5"/><circle class="chart-dot" style="--c:#e4b08a;--pd:1.25s" cx="170" cy="86" r="5" fill="#e4b08a"/>
+                            <circle class="chart-halo" style="--c:#d6e7fe;--pd:1.55s" cx="245" cy="60" r="5"/><circle class="chart-dot" style="--c:#d6e7fe;--pd:1.55s" cx="245" cy="60" r="5" fill="#d6e7fe"/>
+                            <circle class="chart-halo" style="--c:#fcd77a;--pd:1.85s" cx="308" cy="40" r="5"/><circle class="chart-dot" style="--c:#fcd77a;--pd:1.85s" cx="308" cy="40" r="5" fill="#fcd77a"/>
+                            <g font-size="11" font-weight="800" fill="#e9ddf7" text-anchor="middle">
+                                <text class="chart-lbl" style="animation-delay:.7s" x="30" y="132">LT5</text>
+                                <text class="chart-lbl" style="animation-delay:1.05s" x="95" y="120">HT4</text>
+                                <text class="chart-lbl" style="animation-delay:1.35s" x="170" y="106">HT3</text>
+                                <text class="chart-lbl" style="animation-delay:1.65s" x="245" y="80">LT2</text>
+                                <text class="chart-lbl" style="animation-delay:1.95s" x="308" y="60">HT1</text>
+                            </g>
+                        </svg>
+                        <p class="text-xs text-slate-500 mt-2 leading-relaxed">Mỗi chế độ đều có Tier riêng, càng cao thì điểm tổng càng tăng trên bảng xếp hạng Overall.</p>
+                    </div>
+                </div>
+
+                <!-- Live leaderboard -->
+                <div data-reveal class="relative lg:pt-4 min-w-0">
+                    <div class="glass-card p-5 sm:p-6 relative" style="z-index:1">
+                        <div class="flex items-start justify-between gap-3 mb-5">
+                            <div>
+                                <div class="live-tag"><span class="live-dot"></span> LIVE LEADERBOARD</div>
+                                <h2 class="text-2xl font-extrabold text-white mt-1">Top Players</h2>
+                            </div>
+                            <button class="mode-pill" onclick="goPage('board',{mode: homeMode})" title="Xem bảng xếp hạng đầy đủ">
+                                <img id="homeModeIcon" src="" alt=""><span id="homeModeName">Overall</span>
+                            </button>
+                        </div>
+                        <div id="homeTopList" class="flex flex-col gap-3 min-h-[240px]"></div>
+                        <button onclick="goPage('board',{mode: homeMode})" class="mt-4 w-full text-center text-xs font-extrabold text-fuchsia-300 hover:text-white transition-colors">Xem bảng xếp hạng đầy đủ <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                        <div class="border-t border-white/10 mt-4 pt-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-[11px] font-extrabold tracking-[.18em] text-slate-500 uppercase">Modes Leaderboard</span>
+                                <span id="homeModeCount" class="text-[11px] font-bold text-slate-500">9 Chế Độ</span>
+                            </div>
+                            <div id="homeModeGrid" class="grid grid-cols-3 gap-2"></div>
+                        </div>
+                    </div>
+                    <img class="float-deco hidden lg:block fd-l" src="https://cdn.discordapp.com/emojis/1549311752771084348.webp?size=96&quality=lossless" alt="">
+                    <img class="float-deco hidden sm:block fd-tr" src="https://cdn.discordapp.com/emojis/1549311743975497759.webp?size=96&quality=lossless" alt="">
+                    <img class="float-deco hidden sm:block fd-b" src="https://cdn.discordapp.com/emojis/1549311747725336598.webp?size=96&quality=lossless" alt="">
+                </div>
+            </section>
+
+            <!-- Quy trình test -->
+            <section id="testSection" class="sec py-14">
+                <div class="sr text-center max-w-2xl mx-auto">
+                    <div class="text-[11px] font-extrabold tracking-[.2em] text-fuchsia-400 uppercase">Quy Trình Test</div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Làm sao để được xếp Tier?</h2>
+                    <p class="text-slate-400 mt-3 text-sm sm:text-base">Chỉ với 4 bước đơn giản, bạn đã có tên trên bảng xếp hạng.</p>
+                </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
+                    <div class="sr" style="--d:0ms"><div class="step-card"><div class="step-no">BƯỚC 01</div><div class="step-ic"><i class="fa-brands fa-discord"></i></div><h3 class="text-lg font-extrabold text-white">Tham gia Discord</h3><p class="text-sm text-slate-400 mt-2 leading-relaxed">Vào Discord cộng đồng và đọc kỹ luật trước khi đăng ký test.</p></div></div>
+                    <div class="sr" style="--d:90ms"><div class="step-card"><div class="step-no">BƯỚC 02</div><div class="step-ic"><i class="fa-solid fa-ticket"></i></div><h3 class="text-lg font-extrabold text-white">Đăng ký test</h3><p class="text-sm text-slate-400 mt-2 leading-relaxed">Mở ticket, chọn chế độ muốn test và khu vực (region) của bạn.</p></div></div>
+                    <div class="sr" style="--d:180ms"><div class="step-card"><div class="step-no">BƯỚC 03</div><div class="step-ic"><i class="fa-solid fa-hand-fist"></i></div><h3 class="text-lg font-extrabold text-white">Đấu với Tester</h3><p class="text-sm text-slate-400 mt-2 leading-relaxed">Thi đấu cùng tester của chế độ đó để đánh giá đúng trình độ.</p></div></div>
+                    <div class="sr" style="--d:270ms"><div class="step-card"><div class="step-no">BƯỚC 04</div><div class="step-ic"><i class="fa-solid fa-trophy"></i></div><h3 class="text-lg font-extrabold text-white">Nhận Tier</h3><p class="text-sm text-slate-400 mt-2 leading-relaxed">Tier được cập nhật lên bảng xếp hạng và cộng điểm vào Overall.</p></div></div>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section id="faqSection" class="sec py-14 pb-20">
+                <div class="sr text-center max-w-2xl mx-auto">
+                    <div class="text-[11px] font-extrabold tracking-[.2em] text-fuchsia-400 uppercase">FAQ</div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Câu hỏi thường gặp</h2>
+                </div>
+                <div class="max-w-3xl mx-auto mt-10 flex flex-col gap-3">
+                    <div class="sr" style="--d:0ms"><div class="faq-item open"><button class="faq-q" onclick="toggleFaq(this)">Tier và điểm được tính như thế nào?<i class="fa-solid fa-chevron-down"></i></button><div class="faq-a"><div><p>Mỗi chế độ có Tier riêng từ LT5 đến HT1, mỗi Tier tương ứng một số điểm. Tổng điểm của tất cả chế độ tạo nên điểm Overall. <button class="lnk" onclick="goPage('board').then(()=>openInfoModal())">Xem bảng điểm chi tiết</button>.</p></div></div></div></div>
+                    <div class="sr" style="--d:70ms"><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Làm sao để được test?<i class="fa-solid fa-chevron-down"></i></button><div class="faq-a"><div><p>Tham gia Discord của cộng đồng, mở ticket test và chọn chế độ bạn muốn được đánh giá. Tester sẽ liên hệ và sắp xếp trận đấu cho bạn.</p></div></div></div></div>
+                    <div class="sr" style="--d:140ms"><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">HT và LT nghĩa là gì?<i class="fa-solid fa-chevron-down"></i></button><div class="faq-a"><div><p>HT là High Tier (nửa trên của bậc), LT là Low Tier (nửa dưới). Ví dụ HT3 cao hơn LT3 và thấp hơn LT2.</p></div></div></div></div>
+                    <div class="sr" style="--d:210ms"><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Region (khu vực) là gì?<i class="fa-solid fa-chevron-down"></i></button><div class="faq-a"><div><p>Region là khu vực của người chơi: NA, EU, AS, SA, AU, ME. Người chơi Việt Nam thuộc khu vực AS (Châu Á). Bạn có thể lọc bảng xếp hạng theo region.</p></div></div></div></div>
+                    <div class="sr" style="--d:280ms"><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Tôi có thể test lại để lên Tier không?<i class="fa-solid fa-chevron-down"></i></button><div class="faq-a"><div><p>Có. Sau một khoảng thời gian chờ do staff quy định, bạn có thể đăng ký test lại để nâng Tier.</p></div></div></div></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========== TRANG BẢNG XẾP HẠNG ========== -->
+        <div class="w-full hidden" id="boardPage">
             <!-- Tabs Bar -->
-            <div class="card-dark p-2 mb-5">
+            <div data-reveal class="card-dark p-2 mb-5">
                 <div class="w-full overflow-x-auto overflow-y-visible no-scrollbar">
                     <div id="modeTabsWrapper" class="flex items-center gap-1 w-max relative pb-1">
                         <div id="activeIndicator"></div>
@@ -421,7 +630,7 @@
             </div>
 
             <!-- VIEW 1: Leaderboard Container -->
-            <div id="leaderboardView" class="card-dark relative z-10 overflow-hidden">
+            <div id="leaderboardView" data-reveal class="card-dark relative z-10 overflow-hidden">
                 <div class="px-4 sm:px-7 pt-6 sm:pt-7">
                     <div class="flex items-start justify-between gap-4 mb-5">
                         <div>
@@ -574,6 +783,7 @@
                 splash.classList.add('splash-out');
                 document.body.classList.add('page-enter');
                 document.body.classList.remove('splash-lock');
+                if (typeof staggerIn === 'function') { staggerIn(document.getElementById(PAGES[currentPage])); playHome(); }
                 setTimeout(() => { splash.remove(); document.body.classList.remove('page-enter'); }, 1600);
             }
             function scheduleHide() {
@@ -923,9 +1133,11 @@
 
                     players.sort((a, b) => b.points - a.points);
                     renderLeaderboard();
+                    homeLoaded = true; renderHomeTop(false);
                 }
             } catch (err) {
                 console.error('Lỗi kết nối Appwrite:', err);
+                homeLoaded = true; renderHomeTop(false);
             }
         }
 
@@ -1370,6 +1582,185 @@
             });
         }
             renderRegionChips();
+    
+        // =====================================================================
+        //  SẢNH (HOME) + ĐIỀU HƯỚNG + HIỆU ỨNG CHUYỂN TRANG
+        // =====================================================================
+        const PAGES = { home: 'homeView', board: 'boardPage' };
+        const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const EASE_OUT = 'cubic-bezier(.2,.8,.2,1)';
+        const $id = (x) => document.getElementById(x);
+        let currentPage = 'home', pageBusy = false, queuedNav = null;
+        let homeMode = 'overall', homeLoaded = false;
+        const TROPHY_COLORS = ['#fbbf24', '#cbd5e1', '#d48f54'];
+
+        function routeFromHash() {
+            const h = (location.hash || '').replace('#', '').toLowerCase();
+            if (h === 'leaderboard') return { page: 'board' };
+            if (h === 'test') return { page: 'home', section: 'testSection' };
+            if (h === 'faq') return { page: 'home', section: 'faqSection' };
+            return { page: 'home' };
+        }
+        function hashFor(page, section) {
+            if (page === 'board') return '#leaderboard';
+            if (section === 'testSection') return '#test';
+            if (section === 'faqSection') return '#faq';
+            return '#home';
+        }
+        function setNavActive(page) {
+            const d = $id('navBtnLeaderboard'); if (d) d.className = 'nav-item' + (page === 'board' ? ' active' : '');
+            const mh = $id('mNavHome'), mb = $id('mNavBoard');
+            if (mh) mh.classList.toggle('active', page === 'home');
+            if (mb) mb.classList.toggle('active', page === 'board');
+        }
+        function scrollToSection(id) {
+            const t = $id(id); if (t) t.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
+        }
+        function playHome() {
+            const h = $id('homeView'); if (!h) return;
+            h.classList.remove('play'); void h.offsetWidth; h.classList.add('play');
+        }
+        function progressStart() {
+            const b = $id('pageProgress'); if (!b || REDUCED) return;
+            b.getAnimations().forEach(a => a.cancel());
+            b.style.opacity = 1;
+            b.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(.8)' }], { duration: 480, easing: EASE_OUT, fill: 'forwards' });
+        }
+        function progressEnd() {
+            const b = $id('pageProgress'); if (!b || REDUCED) return;
+            b.animate([{ transform: 'scaleX(.8)', opacity: 1 }, { transform: 'scaleX(1)', opacity: 1, offset: .55 }, { transform: 'scaleX(1)', opacity: 0 }], { duration: 620, easing: 'ease-out', fill: 'forwards' });
+        }
+        function staggerIn(root) {
+            if (REDUCED || !root) return;
+            root.querySelectorAll('[data-reveal]').forEach((n, i) => {
+                n.animate([{ opacity: 0, transform: 'translateY(28px)' }, { opacity: 1, transform: 'none' }],
+                    { duration: 680, delay: 120 + i * 90, easing: EASE_OUT, fill: 'backwards' });
+            });
+        }
+
+        async function goPage(page, opts = {}) {
+            const { push = true, section = null, mode = null } = opts;
+            if (!PAGES[page]) return;
+            if (pageBusy) { queuedNav = [page, opts]; return; }
+            if (push && location.hash !== hashFor(page, section)) history.pushState({ page }, '', hashFor(page, section));
+            try { closeUserMenu(); } catch (e) {}
+
+            if (page === currentPage) {
+                if (mode && mode !== activeTab) switchTab(mode);
+                if (section) scrollToSection(section); else window.scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' });
+                return;
+            }
+
+            pageBusy = true;
+            const cur = $id(PAGES[currentPage]), next = $id(PAGES[page]);
+            setNavActive(page);
+            progressStart();
+
+            if (!REDUCED) {
+                try {
+                    await cur.animate(
+                        [{ opacity: 1, transform: 'none', filter: 'blur(0px)' }, { opacity: 0, transform: 'translateY(-16px) scale(.985)', filter: 'blur(6px)' }],
+                        { duration: 300, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' }
+                    ).finished;
+                } catch (e) {}
+            }
+            cur.classList.add('hidden');
+            cur.getAnimations().forEach(a => a.cancel());
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            next.classList.remove('hidden');
+            currentPage = page;
+
+            if (page === 'board') {
+                if (mode && mode !== activeTab) switchTab(mode);
+                else { renderLeaderboard(); }
+                updateIndicatorPosition();
+            } else {
+                playHome();
+            }
+
+            if (!REDUCED) {
+                next.animate(
+                    [{ opacity: 0, transform: 'translateY(26px) scale(.99)', filter: 'blur(8px)' }, { opacity: 1, transform: 'none', filter: 'blur(0px)' }],
+                    { duration: 560, easing: EASE_OUT }
+                );
+                staggerIn(next);
+            }
+            progressEnd();
+            if (section) setTimeout(() => scrollToSection(section), REDUCED ? 0 : 380);
+            pageBusy = false;
+            if (queuedNav) { const q = queuedNav; queuedNav = null; goPage(q[0], q[1]); }
+        }
+
+        // ---------- Trang chủ: Top Players ----------
+        function homeScore(p) {
+            return homeMode === 'overall' ? p.points : (TIER_POINTS[(p.tiers || {})[homeMode]] || 0);
+        }
+        function renderHomeGrid() {
+            const grid = $id('homeModeGrid'); if (!grid) return;
+            const gm = modes.filter(x => x.id !== 'overall');
+            $id('homeModeCount').textContent = `${gm.length} Chế Độ`;
+            grid.innerHTML = gm.map(x => `<button class="home-mode ${x.id === homeMode ? 'active' : ''}" data-mode="${x.id}" onclick="setHomeMode('${x.id}')"><img src="${x.icon}" alt="${x.name}"><span>${x.name}</span></button>`).join('');
+        }
+        function setHomeMode(id) {
+            homeMode = (homeMode === id) ? 'overall' : id;
+            document.querySelectorAll('#homeModeGrid .home-mode').forEach(b => b.classList.toggle('active', b.dataset.mode === homeMode));
+            renderHomeTop(true);
+        }
+        function renderHomeTop(animate) {
+            const list = $id('homeTopList'); if (!list) return;
+            const m = modes.find(x => x.id === homeMode) || modes[0];
+            $id('homeModeIcon').src = m.icon;
+            $id('homeModeName').textContent = homeMode === 'overall' ? 'Overall' : m.name;
+
+            if (!homeLoaded) { list.innerHTML = '<div class="skel"></div><div class="skel"></div><div class="skel"></div>'; return; }
+
+            const top = players.map(p => ({ p, s: homeScore(p) })).filter(x => x.s > 0).sort((a, b) => b.s - a.s).slice(0, 3);
+            if (!top.length) {
+                list.innerHTML = '<div class="text-center text-sm font-semibold text-slate-500 py-12 row-in"><i class="fa-solid fa-ghost text-3xl mb-3 block"></i>Chưa có người chơi ở chế độ này</div>';
+                return;
+            }
+            list.innerHTML = top.map((x, i) => `
+                <div class="top-row ${i === 0 ? 't1' : ''} ${animate ? 'row-in' : ''}" style="animation-delay:${i * 70}ms" onclick="openPlayerModal('${x.p.username}')">
+                    <span class="rk">#${i + 1}</span>
+                    <i class="fa-solid fa-trophy" style="color:${TROPHY_COLORS[i]}"></i>
+                    <img class="sk" src="https://vzge.me/bust/220/${x.p.username}" alt="${x.p.username}" onerror="this.src='https://vzge.me/bust/220/Steve'">
+                    <div class="min-w-0"><div class="nm truncate">${x.p.username}</div><div class="pt">${x.s} points</div></div>
+                </div>`).join('');
+        }
+
+        function toggleFaq(btn) {
+            const item = btn.closest('.faq-item'); if (item) item.classList.toggle('open');
+        }
+
+        function initScrollReveal() {
+            const els = document.querySelectorAll('.sr');
+            if (REDUCED || !('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+            }, { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+            els.forEach(e => io.observe(e));
+        }
+
+        function initRouter() {
+            const r = routeFromHash();
+            if (r.page === 'board') {
+                $id('homeView').classList.add('hidden');
+                $id('boardPage').classList.remove('hidden');
+                currentPage = 'board';
+                updateIndicatorPosition();
+            } else if (r.section) {
+                setTimeout(() => scrollToSection(r.section), 2500);
+            }
+            setNavActive(currentPage);
+            window.addEventListener('popstate', () => { const x = routeFromHash(); goPage(x.page, { push: false, section: x.section }); });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderHomeGrid();
+            renderHomeTop(false);
+            initScrollReveal();
+            initRouter();
+        });
     </script>
 </body>
 </html>
