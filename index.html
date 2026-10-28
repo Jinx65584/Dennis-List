@@ -439,9 +439,187 @@
         /* menu mobile */
         .m-nav{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 4px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#bfaedb;border-radius:12px;transition:color .25s,background .25s}
         .m-nav.active{color:#fff;background:rgba(217,70,239,.16)}
+    
+/* =====================================================================
+   ✨ NÂNG CẤP GIAO DIỆN (FX LAYER) — thêm vào cuối <style>
+   ===================================================================== */
+html { scroll-behavior: smooth; }
+::selection { background: rgba(217,70,239,.55); color: #fff; }
+:focus-visible { outline: 2px solid #ff5ce1; outline-offset: 2px; border-radius: 8px; }
+
+/* ---------- Nền động: aurora + lưới + hạt pixel ---------- */
+.fx-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.fx-bg .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .5; will-change: transform; }
+.fx-bg .o1 { width: 560px; height: 560px; left: -140px; top: -120px; background: #c026d3; animation: orbA 22s ease-in-out infinite alternate; }
+.fx-bg .o2 { width: 520px; height: 520px; right: -160px; top: 25%; background: #7c3aed; opacity: .42; animation: orbB 26s ease-in-out infinite alternate; }
+.fx-bg .o3 { width: 440px; height: 440px; left: 30%; bottom: -200px; background: #db2777; opacity: .28; animation: orbC 30s ease-in-out infinite alternate; }
+@keyframes orbA { to { transform: translate(180px, 140px) scale(1.15); } }
+@keyframes orbB { to { transform: translate(-220px, 120px) scale(.9); } }
+@keyframes orbC { to { transform: translate(160px, -120px) scale(1.2); } }
+.fx-grid {
+    position: absolute; inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 72%);
+    mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 72%);
+}
+.fx-vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 55%, rgba(3,1,8,.65) 100%); }
+.fx-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+/* ---------- Thanh điều hướng ---------- */
+nav > div { transition: background-color .35s ease, box-shadow .35s ease, border-color .35s ease, transform .35s ease; }
+nav.scrolled > div {
+    background-color: rgba(9,4,15,.92) !important;
+    border-color: rgba(217,70,239,.28) !important;
+    box-shadow: 0 14px 44px rgba(0,0,0,.6), 0 0 28px rgba(217,70,239,.12);
+}
+.nav-item { position: relative; padding-bottom: 2px; }
+.nav-item::after {
+    content: ''; position: absolute; left: 44px; right: 0; bottom: -7px; height: 2px; border-radius: 2px;
+    background: linear-gradient(90deg, #ff5ce1, #a855f7);
+    box-shadow: 0 0 8px rgba(255,92,225,.8);
+    transform: scaleX(0); transform-origin: left; transition: transform .3s cubic-bezier(.2,.8,.2,1);
+}
+.nav-item:hover::after, .nav-item.active::after { transform: scaleX(1); }
+.nav-item:hover .nav-chip { color: #ff9df0; border-color: rgba(217,70,239,.45); transform: translateY(-1px); }
+.nav-chip { transition: all .25s ease; }
+
+/* ---------- Tiêu đề gradient chuyển động ---------- */
+.grad-text {
+    background: linear-gradient(90deg, #ff7ae8, #ff9a6b, #fbbf24, #ff9a6b, #ff7ae8);
+    background-size: 220% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    animation: gradMove 6s ease-in-out infinite alternate;
+    filter: drop-shadow(0 0 22px rgba(255,92,225,.28));
+}
+@keyframes gradMove { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+
+/* ---------- Nút hero: quét sáng ---------- */
+.hero-btn { position: relative; overflow: hidden; }
+.hero-btn::after {
+    content: ''; position: absolute; top: 0; left: -120%; width: 55%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.2), transparent);
+    transform: skewX(-20deg); transition: left .7s ease;
+}
+.hero-btn:hover::after { left: 150%; }
+.hero-btn:active { transform: translateY(-1px) scale(.97); }
+
+/* ---------- Spotlight theo con trỏ chuột ---------- */
+.glass-card, .step-card, .player-row, .top-row, .faq-item, .home-mode, .tier-col-card { position: relative; }
+.glass-card::before, .step-card::before, .player-row::before, .top-row::before,
+.faq-item::before, .home-mode::before, .tier-col-card::before {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1;
+    opacity: 0; transition: opacity .35s ease;
+    background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), rgba(255,92,225,.15), transparent 70%);
+}
+.glass-card:hover::before, .step-card:hover::before, .player-row:hover::before, .top-row:hover::before,
+.faq-item:hover::before, .home-mode:hover::before, .tier-col-card:hover::before { opacity: 1; }
+
+/* ---------- Số liệu nhanh ở trang chủ ---------- */
+.fx-stats { display: flex; gap: 12px; margin-top: 26px; flex-wrap: wrap; }
+.fx-stat {
+    min-width: 108px; padding: 12px 18px; border-radius: 16px;
+    background: rgba(255,255,255,.035); border: 1px solid rgba(168,85,247,.22);
+    backdrop-filter: blur(6px); transition: transform .3s cubic-bezier(.2,.8,.2,1), border-color .3s;
+}
+.fx-stat:hover { transform: translateY(-3px); border-color: rgba(217,70,239,.6); }
+.fx-stat b { display: block; font-size: 26px; font-weight: 800; line-height: 1.1; color: #fff; }
+.fx-stat span { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #9885b8; }
+
+/* ---------- Bảng xếp hạng ---------- */
+.player-row { position: relative; }
+#leaderboardBody .player-row { animation: rowSlide .5s cubic-bezier(.2,.8,.2,1) backwards; }
+@keyframes rowSlide { from { opacity: 0; transform: translateY(18px) scale(.985) translateZ(0); } }
+#leaderboardBody .player-row:nth-child(1) { animation-delay: 55ms; }
+#leaderboardBody .player-row:nth-child(2) { animation-delay: 110ms; }
+#leaderboardBody .player-row:nth-child(3) { animation-delay: 165ms; }
+#leaderboardBody .player-row:nth-child(4) { animation-delay: 220ms; }
+#leaderboardBody .player-row:nth-child(5) { animation-delay: 275ms; }
+#leaderboardBody .player-row:nth-child(6) { animation-delay: 330ms; }
+#leaderboardBody .player-row:nth-child(7) { animation-delay: 385ms; }
+#leaderboardBody .player-row:nth-child(8) { animation-delay: 440ms; }
+#leaderboardBody .player-row:nth-child(9) { animation-delay: 495ms; }
+#leaderboardBody .player-row:nth-child(10) { animation-delay: 550ms; }
+#leaderboardBody .player-row:nth-child(11) { animation-delay: 605ms; }
+#leaderboardBody .player-row:nth-child(12) { animation-delay: 660ms; }
+
+@property --ang { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes spinAng { to { --ang: 360deg; } }
+.row-r1::after, .row-r2::after, .row-r3::after {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; z-index: 2;
+    background: conic-gradient(from var(--ang), transparent 0 72%, var(--rc, #fbbf24) 88%, transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: spinAng 4.5s linear infinite;
+}
+.row-r2 { --rc: #cbd5e1; }
+.row-r3 { --rc: #fb923c; }
+.row-r2::after, .row-r3::after { animation-duration: 6s; opacity: .8; }
+.row-r1 .font-extrabold.truncate { text-shadow: 0 0 18px rgba(250,204,21,.45); }
+
+.horizontal-scroll-container .rounded-full { transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s; }
+.horizontal-scroll-container .rounded-full:hover { transform: translateY(-3px) scale(1.12); box-shadow: 0 6px 18px rgba(217,70,239,.45); }
+.title-badge { transition: transform .2s ease, filter .2s ease; }
+.player-row:hover .title-badge { filter: brightness(1.2); }
+.player-row:active { transform: scale(.995) translateZ(0); }
+
+.mode-btn.active { box-shadow: 0 0 0 1px rgba(217,70,239,.45), 0 8px 26px rgba(217,70,239,.2); }
+.chip { transition: all .2s cubic-bezier(.2,.8,.2,1); }
+.chip:hover { transform: translateY(-1px); }
+.chip:active { transform: scale(.95); }
+#searchInput { transition: border-color .25s, box-shadow .25s; }
+#searchInput:focus { box-shadow: 0 0 0 3px rgba(217,70,239,.18), 0 0 22px rgba(217,70,239,.2); }
+
+/* ---------- Popup mở mượt ---------- */
+@keyframes fxFade { from { opacity: 0; } }
+@keyframes fxPop { from { opacity: 0; transform: translateY(24px) scale(.94); filter: blur(6px); } }
+#playerModal:not(.hidden), #infoModal:not(.hidden) { animation: fxFade .25s ease; }
+#playerModal:not(.hidden) > div > div, #infoModal:not(.hidden) > div { animation: fxPop .45s cubic-bezier(.2,.9,.3,1.12); }
+#modalSkinImg { animation: skinFloat 4s ease-in-out infinite; }
+@keyframes skinFloat { 50% { transform: translateY(-6px); } }
+
+/* ---------- Nút lên đầu trang ---------- */
+.fx-top {
+    position: fixed; right: 22px; bottom: 22px; z-index: 60; width: 46px; height: 46px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; color: #fff; font-size: 15px; cursor: pointer;
+    background: linear-gradient(135deg, #c026d3, #7c3aed); border: 1px solid rgba(255,255,255,.18);
+    box-shadow: 0 10px 28px rgba(192,38,211,.45);
+    opacity: 0; transform: translateY(16px) scale(.8); pointer-events: none;
+    transition: opacity .3s, transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s;
+}
+.fx-top.show { opacity: 1; transform: none; pointer-events: auto; }
+.fx-top:hover { box-shadow: 0 14px 34px rgba(255,92,225,.6); transform: translateY(-3px); }
+
+/* ---------- Footer ---------- */
+footer { position: relative; }
+footer::before {
+    content: ''; position: absolute; top: -1px; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg, transparent, #ff5ce1, transparent); opacity: .7;
+}
+
+@media (max-width: 639px) {
+    .fx-bg .orb { filter: blur(70px); }
+    .fx-stat { flex: 1; min-width: 0; padding: 10px 12px; }
+    .fx-stat b { font-size: 21px; }
+    .fx-top { right: 14px; bottom: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .fx-bg .orb, .grad-text, .row-r1::after, .row-r2::after, .row-r3::after, #modalSkinImg { animation: none !important; }
+}
+
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-fuchsia-500 selection:text-white splash-lock">
+    <!-- NỀN ĐỘNG -->
+    <div class="fx-bg" aria-hidden="true">
+        <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+        <div class="fx-grid"></div><div class="fx-vignette"></div>
+    </div>
+    <canvas id="fxCanvas" class="fx-canvas" aria-hidden="true"></canvas>
+    <button id="fxTop" class="fx-top" aria-label="Lên đầu trang"><i class="fa-solid fa-chevron-up"></i></button>
+
 
     <!-- SPLASH SCREEN -->
     <div id="splash">
@@ -519,6 +697,12 @@
                     <div data-reveal class="mt-8 flex flex-wrap gap-3">
                         <button onclick="goPage('board')" class="hero-btn"><i class="fa-solid fa-trophy" style="color:#fbbf24"></i> Bảng Xếp Hạng</button>
                         <a href="https://discord.gg/zy2ZsH4pvr" target="_blank" rel="noopener" class="hero-btn"><img src="https://cdn.discordapp.com/emojis/1549311745951010867.webp?size=48&quality=lossless" alt=""> Tham gia ngay!</a>
+                    </div>
+
+                    <div data-reveal class="fx-stats">
+                        <div class="fx-stat"><b id="fxStatPlayers">0</b><span>Người chơi</span></div>
+                        <div class="fx-stat"><b id="fxStatModes">0</b><span>Chế độ</span></div>
+                        <div class="fx-stat"><b id="fxStatTop">0</b><span>Điểm cao nhất</span></div>
                     </div>
 
                     <!-- Hệ thống tier -->
@@ -1762,5 +1946,106 @@
             initRouter();
         });
     </script>
+<script>
+/* ===== ✨ FX LAYER: hiệu ứng nâng cấp (không đụng tới logic Appwrite) ===== */
+(function () {
+    const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // 1) Spotlight theo con trỏ chuột trên thẻ
+    const SPOT = '.glass-card,.step-card,.player-row,.top-row,.faq-item,.home-mode,.tier-col-card';
+    document.addEventListener('pointermove', (e) => {
+        const t = e.target.closest && e.target.closest(SPOT);
+        if (!t) return;
+        const r = t.getBoundingClientRect();
+        t.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        t.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    }, { passive: true });
+
+    // 2) Navbar đậm hơn khi cuộn + nút lên đầu trang
+    const nav = document.querySelector('nav');
+    const topBtn = document.getElementById('fxTop');
+    function onScroll() {
+        const y = window.scrollY;
+        if (nav) nav.classList.toggle('scrolled', y > 24);
+        if (topBtn) topBtn.classList.toggle('show', y > 420);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    if (topBtn) topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: REDUCE ? 'auto' : 'smooth' }));
+
+    // 3) Hạt pixel bay lơ lửng ở nền
+    const cv = document.getElementById('fxCanvas');
+    if (cv && !REDUCE) {
+        const ctx = cv.getContext('2d');
+        let W, H, parts = [], raf, running = true;
+        const COLORS = ['255,92,225', '168,85,247', '251,191,36', '255,255,255'];
+        function resize() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr;
+            cv.style.width = innerWidth + 'px'; cv.style.height = innerHeight + 'px';
+            const n = innerWidth < 640 ? 22 : 46;
+            parts = Array.from({ length: n }, () => spawn(true, dpr));
+        }
+        function spawn(rand, dpr) {
+            return {
+                x: Math.random() * W, y: rand ? Math.random() * H : H + 10,
+                s: (Math.random() * 2.6 + 1.2) * dpr,
+                v: (Math.random() * .35 + .12) * dpr,
+                dx: (Math.random() - .5) * .25 * dpr,
+                a: Math.random() * .5 + .15,
+                c: COLORS[(Math.random() * COLORS.length) | 0],
+                t: Math.random() * 6.28
+            };
+        }
+        function frame() {
+            if (!running) return;
+            ctx.clearRect(0, 0, W, H);
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            for (let i = 0; i < parts.length; i++) {
+                const p = parts[i];
+                p.y -= p.v; p.x += p.dx + Math.sin(p.t += .01) * .15 * dpr;
+                if (p.y < -10) parts[i] = spawn(false, dpr);
+                ctx.fillStyle = `rgba(${p.c},${p.a * (0.6 + 0.4 * Math.sin(p.t * 2))})`;
+                ctx.fillRect(p.x, p.y, p.s, p.s);
+            }
+            raf = requestAnimationFrame(frame);
+        }
+        resize(); frame();
+        let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(resize, 200); });
+        document.addEventListener('visibilitychange', () => {
+            running = !document.hidden;
+            if (running) frame(); else cancelAnimationFrame(raf);
+        });
+    }
+
+    // 4) Số liệu trang chủ đếm lên mượt
+    function countTo(el, to) {
+        if (!el) return;
+        const from = parseInt(el.dataset.v || '0', 10);
+        if (from === to) { el.textContent = to; return; }
+        el.dataset.v = to;
+        if (REDUCE) { el.textContent = to; return; }
+        const t0 = performance.now(), dur = 1100;
+        (function tick(t) {
+            const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+            el.textContent = Math.round(from + (to - from) * e);
+            if (k < 1) requestAnimationFrame(tick);
+        })(t0);
+    }
+    function updateStats() {
+        if (typeof players === 'undefined' || !players.length) return;
+        countTo(document.getElementById('fxStatPlayers'), players.length);
+        const top = players.reduce((m, p) => Math.max(m, p.points || 0), 0);
+        countTo(document.getElementById('fxStatTop'), top);
+    }
+    if (typeof renderHomeTop === 'function') {
+        const orig = renderHomeTop;
+        window.renderHomeTop = function () { const r = orig.apply(this, arguments); try { updateStats(); } catch (e) {} return r; };
+    }
+    const modeCount = document.getElementById('fxStatModes');
+    if (modeCount && typeof modes !== 'undefined') modeCount.textContent = modes.filter(m => m.id !== 'overall').length;
+})();
+</script>
+
 </body>
 </html>
