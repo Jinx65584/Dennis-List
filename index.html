@@ -551,6 +551,7 @@ nav.scrolled > div {
     content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; z-index: 2;
     background: conic-gradient(from var(--ang), transparent 0 72%, var(--rc, #fbbf24) 88%, transparent 100%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor; mask-composite: exclude;
     animation: spinAng 4.5s linear infinite;
 }
@@ -1005,13 +1006,13 @@ footer::before {
 
         // Ngưỡng điểm cho danh hiệu — chỉnh tại đây
         const COMBAT_TITLES = [
-            { min: 250, name: 'Combat Grandmaster', color: '#facc15', bg: 'rgba(250,204,21,.12)', icon: 'https://i.ibb.co/gZLT83ks/combat-grandmaster.webp' }, // TODO: dán URL ảnh icon vào icon
-            { min: 180, name: 'Combat Master', color: '#fb923c', bg: 'rgba(251,146,60,.12)', icon: 'https://i.ibb.co/7dfbFt5H/combat-master.webp' },      // TODO: dán URL ảnh icon vào icon
-            { min: 120, name: 'Combat Ace', color: '#f472b6', bg: 'rgba(244,114,182,.12)', icon: 'https://i.ibb.co/FSyG4YC/ace.webp' },        // TODO: dán URL ảnh icon vào icon
-            { min: 70, name: 'Combat Specialist', color: '#c4b5fd', bg: 'rgba(196,181,253,.12)', icon: 'https://i.ibb.co/h1nHPbXQ/combat-specialist.webp' }, // TODO: dán URL ảnh icon vào icon
-            { min: 30, name: 'Combat Cadet', color: '#7dd3fc', bg: 'rgba(125,211,252,.12)', icon: 'https://i.ibb.co/j91wtrfS/combat-cadet.webp' },      // TODO: dán URL ảnh icon vào icon
-            { min: 10, name: 'Combat Novice', color: '#cbd5e1', bg: 'rgba(203,213,225,.10)', icon: 'https://i.ibb.co/bRJZQtqQ/combat-novice.webp' },     // TODO: dán URL ảnh icon vào icon
-            { min: 0, name: 'Rookie', color: '#94a3b8', bg: 'rgba(148,163,184,.10)', icon: 'https://i.ibb.co/YBLD6Xpv/rookie.webp' }              // TODO: dán URL ảnh icon vào icon
+            { min: 250, name: 'Combat Grandmaster', color: '#facc15', bg: 'rgba(250,204,21,.12)', icon: 'https://i.ibb.co/h14CXzsC/combat-grandmaster.webp' }, // TODO: dán URL ảnh icon vào icon
+            { min: 180, name: 'Combat Master', color: '#fb923c', bg: 'rgba(251,146,60,.12)', icon: 'https://i.ibb.co/WWWX0WtT/combat-master.webp' },      // TODO: dán URL ảnh icon vào icon
+            { min: 120, name: 'Combat Ace', color: '#f472b6', bg: 'rgba(244,114,182,.12)', icon: 'https://i.ibb.co/M55zFyM6/ace.webp' },        // TODO: dán URL ảnh icon vào icon
+            { min: 70, name: 'Combat Specialist', color: '#c4b5fd', bg: 'rgba(196,181,253,.12)', icon: 'https://i.ibb.co/Txgt5XwS/combat-specialist.webp' }, // TODO: dán URL ảnh icon vào icon
+            { min: 30, name: 'Combat Cadet', color: '#7dd3fc', bg: 'rgba(125,211,252,.12)', icon: 'https://i.ibb.co/1tR8nxNN/combat-cadet.webp' },      // TODO: dán URL ảnh icon vào icon
+            { min: 10, name: 'Combat Novice', color: '#cbd5e1', bg: 'rgba(203,213,225,.10)', icon: 'https://i.ibb.co/0yKkXCs4/combat-novice.webp' },     // TODO: dán URL ảnh icon vào icon
+            { min: 0, name: 'Rookie', color: '#94a3b8', bg: 'rgba(148,163,184,.10)', icon: 'https://i.ibb.co/3mxgx9YG/rookie.webp' }              // TODO: dán URL ảnh icon vào icon
         ];
         // Trả về <img> nếu có URL icon, nếu để trống thì dùng icon viên ngọc mặc định
         function titleIconHtml(t) {
@@ -1064,8 +1065,8 @@ footer::before {
             { id: 'Axe', name: 'AXE', icon: 'https://cdn.discordapp.com/emojis/1549311752771084348.webp?size=48&quality=lossless' },
             { id: 'Vanilla', name: 'VANILLA', icon: 'https://cdn.discordapp.com/emojis/1549311743975497759.webp?size=48&quality=lossless' },
             { id: 'Mace', name: 'MACE', icon: 'https://cdn.discordapp.com/emojis/1549311739462422558.webp?size=48&quality=lossless' },
-            { id: 'TNTCart', name: 'TNT CART', icon: 'https://i.ibb.co/whJpHpM7/cart.png' }, // TODO: dán URL ảnh TNT CART vào icon
-            { id: 'Spear', name: 'SPEAR', icon: 'https://i.ibb.co/7x3Zs6TV/spear.png' }      // TODO: dán URL ảnh SPEAR vào icon
+            { id: 'TNTCart', name: 'TNT CART', icon: 'https://i.ibb.co/Nn9c8487/cart.webp' }, // TODO: dán URL ảnh TNT CART vào icon
+            { id: 'Spear', name: 'SPEAR', icon: 'https://i.ibb.co/pB1C4FKV/spear.webp' }      // TODO: dán URL ảnh SPEAR vào icon
         ];
 
         let players = [];
@@ -1565,7 +1566,7 @@ footer::before {
                 const tierHeaderIcons = {
                     'Tier 1': 'https://i.ibb.co/mVXCSfp6/tier-1.webp',
                     'Tier 2': 'https://i.ibb.co/VcvFyQMJ/tier-2.webp',
-                    'Tier 3': 'https://i.ibb.co/W4MB7hdw/tier-3.webp'
+                    'Tier 3': 'https://i.ibb.co/RGr1bK0N/tier-3.webp'
                 };
 
                 tierColumnsGrid.innerHTML = tiersList.map((tierName, i) => {
