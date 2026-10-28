@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600;700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -572,7 +573,7 @@ nav.scrolled > div {
 .player-row:hover .title-badge { filter: brightness(1.2); }
 .player-row:active { transform: scale(.995) translateZ(0); }
 
-.mode-btn.active { box-shadow: 0 0 0 1px rgba(217,70,239,.45), 0 8px 26px rgba(217,70,239,.2); }
+
 .chip { transition: all .2s cubic-bezier(.2,.8,.2,1); }
 .chip:hover { transform: translateY(-1px); }
 .chip:active { transform: scale(.95); }
@@ -615,6 +616,44 @@ footer::before {
     .fx-bg .orb, .grad-text, .row-r1::after, .row-r2::after, .row-r3::after, #modalSkinImg { animation: none !important; }
 }
 
+    
+/* ===== TOP 1 HERO (giống ảnh mẫu) ===== */
+.t1-hero { position: relative; overflow: hidden; padding: 34px 16px 30px; text-align: center; border-bottom: 1px solid rgba(255,255,255,.08); }
+.t1-hero.hidden { display: none; }
+.t1-bgskins { position: absolute; inset: 0; pointer-events: none; }
+.t1-bgskin { position: absolute; width: auto; opacity: .15; filter: grayscale(.55) brightness(.75); transform: rotate(var(--r, 0deg)); }
+.t1-glow {
+    position: absolute; left: 50%; top: 54%; width: min(820px, 135%); height: 340px; transform: translate(-50%, -50%);
+    border-radius: 50%; pointer-events: none;
+    background: radial-gradient(ellipse at center, rgba(249,168,212,.38) 0%, rgba(192,132,252,.26) 38%, rgba(124,58,237,.12) 58%, transparent 72%);
+    filter: blur(6px);
+}
+.t1-spark { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; opacity: 0; pointer-events: none; animation: t1Twinkle 3.2s ease-in-out infinite; }
+@keyframes t1Twinkle { 0%, 100% { opacity: 0; transform: scale(.6); } 50% { opacity: .85; transform: scale(1.4); } }
+.t1-inner { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+.t1-pill {
+    font-family: 'Pixelify Sans', 'Plus Jakarta Sans', monospace; font-weight: 700; font-size: 22px; line-height: 1;
+    color: #facc15; padding: 7px 20px 6px; border: 1px solid rgba(250,204,21,.6); border-radius: 10px;
+    background: rgba(40,28,6,.6); box-shadow: 0 0 18px rgba(250,204,21,.2);
+}
+.t1-skin { height: 240px; width: auto; margin-top: 8px; filter: drop-shadow(0 8px 10px rgba(0,0,0,.55)); animation: skinFloat 4s ease-in-out infinite; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+.t1-inner:hover .t1-skin { transform: scale(1.05); }
+.t1-name { font-family: 'Pixelify Sans', 'Plus Jakarta Sans', monospace; font-weight: 700; font-size: clamp(28px, 4vw, 38px); line-height: 1.1; letter-spacing: .04em; color: #fff; margin-top: 7px; padding: 3px 8px; max-width: 90vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    /* viền tối + bóng để tên nổi bật trên nền hạt sáng của hố đen */
+    -webkit-text-stroke: 1px rgba(10, 2, 20, .9); paint-order: stroke fill;
+    text-shadow: 0 2px 0 #12041f, 0 0 6px rgba(10, 2, 20, .95), 0 0 14px rgba(10, 2, 20, .85), 0 0 26px rgba(10, 2, 20, .7); }
+.t1-sub { font-size: 17px; font-weight: 500; color: #8fa0bd; margin-top: 3px; }
+@media (max-width: 639px) { .t1-skin { height: 190px; } .t1-bgskin { opacity: .1; } .t1-hero { padding-top: 26px; } }
+@media (prefers-reduced-motion: reduce) { .t1-skin, .t1-spark { animation: none !important; } }
+
+/* ===== TAB CHỌN MODE: bỏ khung viền, chỉ giữ thanh ngang bên dưới ===== */
+.mode-btn.active, .mode-btn:focus, .mode-btn:focus-visible, .mode-btn:active {
+    box-shadow: none !important; outline: none !important; border: none !important; background-color: transparent !important;
+}
+    
+/* ===== HỐ ĐEN KIỂU INTERSTELLAR (canvas, hồng nhạt) ===== */
+.t1-glow { filter: none; }
+.t1-bh { position: absolute; left: 0; width: 100%; top: -60px; height: calc(100% + 120px); display: block; pointer-events: none; } /* canvas cao hơn khung glow 60px mỗi phía để vòng cung hố đen không bị cắt */
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-fuchsia-500 selection:text-white splash-lock">
@@ -821,6 +860,7 @@ footer::before {
 
             <!-- VIEW 1: Leaderboard Container -->
             <div id="leaderboardView" data-reveal class="card-dark relative z-10 overflow-hidden">
+                <div id="top1Hero" class="t1-hero hidden"></div>
                 <div class="px-4 sm:px-7 pt-6 sm:pt-7">
                     <div class="flex items-start justify-between gap-4 mb-5">
                         <div>
@@ -2060,6 +2100,185 @@ footer::before {
     }
     const modeCount = document.getElementById('fxStatModes');
     if (modeCount && typeof modes !== 'undefined') modeCount.textContent = modes.filter(m => m.id !== 'overall').length;
+})();
+</script>
+
+<script>
+/* ===== TOP 1 HERO ===== */
+(function () {
+    const POS = [[3,18,110,-62],[13,52,120,38],[24,10,100,20],[30,62,110,-20],[64,8,100,-28],[71,56,120,52],[81,16,110,-50],[90,48,100,24],[47,72,90,70],[55,2,90,-70],[7,76,100,-14],[91,78,100,-44]];
+    let lastKey = '';
+    function skin(name, size) { return 'https://vzge.me/full/' + size + '/' + encodeURIComponent(name); }
+    function tierText(t) { return (t.startsWith('HT') ? 'High Tier ' : 'Low Tier ') + t.slice(-1); }
+
+    window.renderTop1Hero = function () {
+        const el = document.getElementById('top1Hero');
+        if (!el || typeof players === 'undefined') return;
+        if (activeTab === 'overall') { el.classList.add('hidden'); el.innerHTML = ''; lastKey = ''; return; }
+        let top = null, score = 0;
+        players.forEach(p => {
+            const s = activeTab === 'overall' ? (p.points || 0) : (TIER_POINTS[(p.tiers || {})[activeTab]] || 0);
+            if (s > score) { score = s; top = p; }
+        });
+        if (!top) { el.classList.add('hidden'); el.innerHTML = ''; lastKey = ''; return; }
+
+        const key = activeTab + '|' + top.username + '|' + score + '|' + players.length;
+        if (key === lastKey) return;
+        lastKey = key;
+
+        const sub = activeTab === 'overall' ? getCombatTitle(top.points).name : tierText(top.tiers[activeTab]);
+        const bg = POS.map((p, i) => {
+            const pl = players[i % players.length];
+            return `<img class="t1-bgskin" style="left:${p[0]}%;top:${p[1]}%;height:${p[2]}px;--r:${p[3]}deg" src="${skin(pl.username, 160)}" alt="" onerror="this.style.display='none'">`;
+        }).join('');
+        let sparks = '';
+        for (let i = 0; i < 16; i++) {
+            sparks += `<span class="t1-spark" style="left:${15 + Math.random() * 70}%;top:${15 + Math.random() * 70}%;animation-delay:${(Math.random() * 3).toFixed(2)}s;animation-duration:${(2.4 + Math.random() * 2).toFixed(2)}s"></span>`;
+        }
+        el.innerHTML = `
+            <div class="t1-bgskins">${bg}</div>
+            <div class="t1-glow"><canvas class="t1-bh"></canvas></div>
+            ${sparks}
+            <div class="t1-inner" onclick="openPlayerModal('${top.username}')">
+                <div class="t1-pill">#1</div>
+                <img class="t1-skin" src="${skin(top.username, 512)}" alt="${top.username}" onerror="this.onerror=null;this.src='https://vzge.me/full/512/Steve'">
+                <div class="t1-name">${top.username}</div>
+                <div class="t1-sub">${sub}</div>
+            </div>`;
+        el.classList.remove('hidden');
+        const bhCv = el.querySelector('canvas.t1-bh'); if (bhCv && typeof initBlackHole === 'function') initBlackHole(bhCv);
+    };
+
+    if (typeof renderLeaderboard === 'function') {
+        const orig = renderLeaderboard;
+        window.renderLeaderboard = function () {
+            const r = orig.apply(this, arguments);
+            try { renderTop1Hero(); } catch (e) { console.warn(e); }
+            return r;
+        };
+    }
+})();
+</script>
+
+<script>
+/* ===== HỐ ĐEN KIỂU INTERSTELLAR — hạt quay quanh, vòng cung bẻ cong ánh sáng ===== */
+(function () {
+    const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const COLS = [[255, 242, 250], [249, 168, 212], [216, 180, 254], [244, 114, 182]];
+    const LV = [.14, .26, .40, .60];
+    let raf = 0, token = 0;
+
+    window.initBlackHole = function (cv) {
+        cancelAnimationFrame(raf);
+        const my = ++token;
+        const ctx = cv.getContext('2d');
+        let W = 1, H = 1, R = 50, cx = 0, cy = 0, dpr = 1;
+
+        function size() {
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const w = cv.clientWidth, h = cv.clientHeight;
+            if (!w || !h) return false;
+            W = cv.width = Math.round(w * dpr); H = cv.height = Math.round(h * dpr);
+            cx = W / 2; cy = H / 2; const ph = (cv.parentElement ? cv.parentElement.clientHeight : cv.clientHeight) * dpr; R = Math.min(ph * .33, W * .2);
+            return true;
+        }
+        size();
+        if ('ResizeObserver' in window) new ResizeObserver(size).observe(cv);
+
+        const N = innerWidth < 640 ? 900 : 2000;
+        const P = Array.from({ length: N }, () => {
+            const rn = 1.32 + 2.2 * Math.pow(Math.random(), 2.3);
+            return { rn, th: Math.random() * 6.2832, om: 1.2 * Math.pow(1 / rn, 1.5), c: (Math.random() * COLS.length) | 0, k: .6 + Math.random() * .4 };
+        });
+
+        const A = -0.26, cA = Math.cos(A), sA = Math.sin(A), K = .2;
+        const back = Array.from({ length: 16 }, () => []);
+        const front = Array.from({ length: 16 }, () => []);
+        let last = performance.now(), ringA = 0;
+
+        function poly(list, id, rad, k, th, d) {
+            const a1 = th - d * .5, a2 = th - d;
+            const x0 = rad * Math.cos(th), y0 = rad * Math.sin(th) * k;
+            const x1 = rad * Math.cos(a1), y1 = rad * Math.sin(a1) * k;
+            const x2 = rad * Math.cos(a2), y2 = rad * Math.sin(a2) * k;
+            list[id].push(
+                cx + x0 * cA - y0 * sA, cy + x0 * sA + y0 * cA,
+                cx + x1 * cA - y1 * sA, cy + x1 * sA + y1 * cA,
+                cx + x2 * cA - y2 * sA, cy + x2 * sA + y2 * cA);
+        }
+        function strokeLists(lists, w, am, clear) {
+            ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = w * dpr;
+            for (let id = 0; id < 16; id++) {
+                const seg = lists[id]; if (!seg.length) continue;
+                const col = COLS[id >> 2];
+                ctx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${(LV[id & 3] * am).toFixed(3)})`;
+                ctx.beginPath();
+                for (let i = 0; i < seg.length; i += 6) { ctx.moveTo(seg[i], seg[i + 1]); ctx.lineTo(seg[i + 2], seg[i + 3]); ctx.lineTo(seg[i + 4], seg[i + 5]); }
+                ctx.stroke();
+                if (clear) seg.length = 0;
+            }
+        }
+
+        function frame(now) {
+            if (my !== token || !cv.isConnected) return;
+            if (document.hidden || !cv.clientWidth) { last = now || performance.now(); raf = requestAnimationFrame(frame); return; }
+            if (W !== Math.round(cv.clientWidth * dpr)) size();
+            const dt = Math.min(.05, ((now || last) - last) / 1000); last = now || last;
+            ringA += dt * .5;
+
+            for (let i = 0; i < P.length; i++) {
+                const p = P[i];
+                p.th += p.om * dt;
+                const th = p.th, s = Math.sin(th), d = p.om * .45;
+                const dop = .5 + .5 * Math.cos(th - .6);
+                const inner = 1 - (p.rn - 1.32) / 2.2;
+                const a = (.12 + .5 * dop) * (.35 + .65 * inner) * p.k;
+                const lv = Math.min(3, Math.floor(a / .14));
+                const id = p.c * 4 + lv;
+                const rr = p.rn * R;
+                if (s > 0) {
+                    poly(front, id, rr, K, th, d);
+                    poly(back, id, R * (1.03 + (p.rn - 1.25) * .30), 1, th, d);
+                } else {
+                    poly(back, id, rr, K, th, d);
+                    poly(back, id, R * (1.03 + (p.rn - 1.25) * .36), 1, th, d);
+                }
+            }
+
+            ctx.clearRect(0, 0, W, H);
+            // quầng sáng mờ phía sau
+            ctx.globalCompositeOperation = 'source-over';
+            const g = ctx.createRadialGradient(cx, cy, R * .9, cx, cy, R * 2.6);
+            g.addColorStop(0, 'rgba(255,200,236,.30)'); g.addColorStop(.5, 'rgba(192,132,252,.10)'); g.addColorStop(1, 'rgba(192,132,252,0)');
+            ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+            // lớp sau: vòng cung bẻ cong + nửa đĩa phía sau
+            ctx.globalCompositeOperation = 'lighter';
+            strokeLists(back, 5, .15, false); strokeLists(back, 1.1, 1, true);
+
+            // hố đen + vòng photon
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = '#050109';
+            ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832); ctx.fill();
+            const rg = ctx.createRadialGradient(cx, cy, R * .72, cx, cy, R);
+            rg.addColorStop(0, 'rgba(249,168,212,0)'); rg.addColorStop(1, 'rgba(249,168,212,.22)');
+            ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832); ctx.fill();
+            ctx.shadowColor = 'rgba(255,190,232,.95)'; ctx.shadowBlur = 14 * dpr;
+            ctx.strokeStyle = 'rgba(255,236,248,.8)'; ctx.lineWidth = 1.5 * dpr;
+            ctx.beginPath(); ctx.arc(cx, cy, R * 1.005, 0, 6.2832); ctx.stroke();
+            ctx.strokeStyle = 'rgba(255,255,255,.98)'; ctx.lineWidth = 2.2 * dpr;
+            ctx.beginPath(); ctx.arc(cx, cy, R * 1.005, ringA, ringA + 1.5); ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // lớp trước: nửa đĩa phía trước đi ngang qua hố đen
+            ctx.globalCompositeOperation = 'lighter';
+            strokeLists(front, 5, .15, false); strokeLists(front, 1.1, 1.15, true);
+            ctx.globalCompositeOperation = 'source-over';
+
+            if (!REDUCE) raf = requestAnimationFrame(frame);
+        }
+        raf = requestAnimationFrame(frame);
+    };
 })();
 </script>
 
