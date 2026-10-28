@@ -638,10 +638,7 @@ footer::before {
 }
 .t1-skin { height: 240px; width: auto; margin-top: 8px; filter: drop-shadow(0 8px 10px rgba(0,0,0,.55)); animation: skinFloat 4s ease-in-out infinite; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
 .t1-inner:hover .t1-skin { transform: scale(1.05); }
-.t1-name { font-family: 'Pixelify Sans', 'Plus Jakarta Sans', monospace; font-weight: 700; font-size: clamp(28px, 4vw, 38px); line-height: 1.1; letter-spacing: .04em; color: #fff; margin-top: 7px; padding: 3px 8px; max-width: 90vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    /* viền tối + bóng để tên nổi bật trên nền hạt sáng của hố đen */
-    -webkit-text-stroke: 1px rgba(10, 2, 20, .9); paint-order: stroke fill;
-    text-shadow: 0 2px 0 #12041f, 0 0 6px rgba(10, 2, 20, .95), 0 0 14px rgba(10, 2, 20, .85), 0 0 26px rgba(10, 2, 20, .7); }
+.t1-name { font-family: 'Pixelify Sans', 'Plus Jakarta Sans', monospace; font-weight: 600; font-size: clamp(28px, 4vw, 38px); line-height: 1.1; letter-spacing: .04em; color: #fff; margin-top: 10px; max-width: 90vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .t1-sub { font-size: 17px; font-weight: 500; color: #8fa0bd; margin-top: 3px; }
 @media (max-width: 639px) { .t1-skin { height: 190px; } .t1-bgskin { opacity: .1; } .t1-hero { padding-top: 26px; } }
 @media (prefers-reduced-motion: reduce) { .t1-skin, .t1-spark { animation: none !important; } }
@@ -651,9 +648,55 @@ footer::before {
     box-shadow: none !important; outline: none !important; border: none !important; background-color: transparent !important;
 }
     
-/* ===== HỐ ĐEN KIỂU INTERSTELLAR (canvas, hồng nhạt) ===== */
+/* ===== THIÊN HÀ XOAY (vùng tròn sau skin Top 1) ===== */
 .t1-glow { filter: none; }
-.t1-bh { position: absolute; left: 0; width: 100%; top: -60px; height: calc(100% + 120px); display: block; pointer-events: none; } /* canvas cao hơn khung glow 60px mỗi phía để vòng cung hố đen không bị cắt */
+.t1-gtilt { position: absolute; left: 0; top: 50%; width: 100%; aspect-ratio: 1 / 1; transform: translateY(-50%) scaleY(.42); pointer-events: none; }
+.t1-gtilt > i { position: absolute; inset: 0; display: block; border-radius: 50%; will-change: transform; }
+.t1-gcore {
+    background: radial-gradient(circle, rgba(255,222,244,.65) 0%, rgba(249,168,212,.34) 14%, rgba(192,132,252,.18) 30%, transparent 48%);
+    animation: t1Pulse 4.5s ease-in-out infinite;
+}
+.t1-garm {
+    filter: blur(9px);
+    -webkit-mask-image: radial-gradient(circle, #000 0%, rgba(0,0,0,.85) 30%, rgba(0,0,0,.35) 55%, transparent 72%);
+    mask-image: radial-gradient(circle, #000 0%, rgba(0,0,0,.85) 30%, rgba(0,0,0,.35) 55%, transparent 72%);
+}
+.t1-garm.a {
+    background: conic-gradient(from 0deg,
+        rgba(249,168,212,0) 0deg, rgba(249,168,212,.62) 32deg, rgba(192,132,252,.30) 70deg, rgba(0,0,0,0) 112deg,
+        rgba(249,168,212,0) 180deg, rgba(249,168,212,.62) 212deg, rgba(192,132,252,.30) 250deg, rgba(0,0,0,0) 292deg, rgba(249,168,212,0) 360deg);
+    animation: t1Spin 26s linear infinite;
+}
+.t1-garm.b {
+    inset: 12%;
+    background: conic-gradient(from 60deg,
+        rgba(124,58,237,0) 0deg, rgba(139,92,246,.55) 40deg, rgba(244,114,182,.22) 80deg, rgba(0,0,0,0) 125deg,
+        rgba(124,58,237,0) 160deg, rgba(139,92,246,.55) 200deg, rgba(244,114,182,.22) 240deg, rgba(0,0,0,0) 285deg,
+        rgba(124,58,237,0) 320deg, rgba(139,92,246,.4) 345deg, rgba(124,58,237,0) 360deg);
+    animation: t1SpinRev 40s linear infinite;
+}
+.t1-gstars {
+    background-image:
+        radial-gradient(circle at 22% 38%, #fff 0 1.3px, transparent 1.8px),
+        radial-gradient(circle at 31% 62%, #ffd6f2 0 1.1px, transparent 1.6px),
+        radial-gradient(circle at 40% 24%, #fff 0 1px, transparent 1.5px),
+        radial-gradient(circle at 47% 70%, #e9d5ff 0 1.4px, transparent 1.9px),
+        radial-gradient(circle at 58% 30%, #fff 0 1.2px, transparent 1.7px),
+        radial-gradient(circle at 66% 58%, #ffd6f2 0 1.5px, transparent 2px),
+        radial-gradient(circle at 74% 40%, #fff 0 1px, transparent 1.5px),
+        radial-gradient(circle at 80% 66%, #e9d5ff 0 1.2px, transparent 1.7px),
+        radial-gradient(circle at 36% 46%, #fff 0 1px, transparent 1.5px),
+        radial-gradient(circle at 62% 74%, #fff 0 1.1px, transparent 1.6px),
+        radial-gradient(circle at 52% 20%, #ffd6f2 0 1.3px, transparent 1.8px),
+        radial-gradient(circle at 28% 28%, #e9d5ff 0 1px, transparent 1.5px);
+    opacity: .9;
+    animation: t1Spin 70s linear infinite, t1Tw 3.4s ease-in-out infinite;
+}
+@keyframes t1Spin { to { transform: rotate(360deg); } }
+@keyframes t1SpinRev { to { transform: rotate(-360deg); } }
+@keyframes t1Pulse { 0%, 100% { transform: scale(.92); opacity: .85; } 50% { transform: scale(1.08); opacity: 1; } }
+@keyframes t1Tw { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .t1-gtilt > i { animation: none !important; } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-fuchsia-500 selection:text-white splash-lock">
@@ -2137,7 +2180,7 @@ footer::before {
         }
         el.innerHTML = `
             <div class="t1-bgskins">${bg}</div>
-            <div class="t1-glow"><canvas class="t1-bh"></canvas></div>
+            <div class="t1-glow"><div class="t1-gtilt"><i class="t1-gcore"></i><i class="t1-garm a"></i><i class="t1-garm b"></i><i class="t1-gstars"></i></div></div>
             ${sparks}
             <div class="t1-inner" onclick="openPlayerModal('${top.username}')">
                 <div class="t1-pill">#1</div>
@@ -2146,7 +2189,6 @@ footer::before {
                 <div class="t1-sub">${sub}</div>
             </div>`;
         el.classList.remove('hidden');
-        const bhCv = el.querySelector('canvas.t1-bh'); if (bhCv && typeof initBlackHole === 'function') initBlackHole(bhCv);
     };
 
     if (typeof renderLeaderboard === 'function') {
@@ -2157,128 +2199,6 @@ footer::before {
             return r;
         };
     }
-})();
-</script>
-
-<script>
-/* ===== HỐ ĐEN KIỂU INTERSTELLAR — hạt quay quanh, vòng cung bẻ cong ánh sáng ===== */
-(function () {
-    const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const COLS = [[255, 242, 250], [249, 168, 212], [216, 180, 254], [244, 114, 182]];
-    const LV = [.14, .26, .40, .60];
-    let raf = 0, token = 0;
-
-    window.initBlackHole = function (cv) {
-        cancelAnimationFrame(raf);
-        const my = ++token;
-        const ctx = cv.getContext('2d');
-        let W = 1, H = 1, R = 50, cx = 0, cy = 0, dpr = 1;
-
-        function size() {
-            dpr = Math.min(window.devicePixelRatio || 1, 2);
-            const w = cv.clientWidth, h = cv.clientHeight;
-            if (!w || !h) return false;
-            W = cv.width = Math.round(w * dpr); H = cv.height = Math.round(h * dpr);
-            cx = W / 2; cy = H / 2; const ph = (cv.parentElement ? cv.parentElement.clientHeight : cv.clientHeight) * dpr; R = Math.min(ph * .33, W * .2);
-            return true;
-        }
-        size();
-        if ('ResizeObserver' in window) new ResizeObserver(size).observe(cv);
-
-        const N = innerWidth < 640 ? 900 : 2000;
-        const P = Array.from({ length: N }, () => {
-            const rn = 1.32 + 2.2 * Math.pow(Math.random(), 2.3);
-            return { rn, th: Math.random() * 6.2832, om: 1.2 * Math.pow(1 / rn, 1.5), c: (Math.random() * COLS.length) | 0, k: .6 + Math.random() * .4 };
-        });
-
-        const A = -0.26, cA = Math.cos(A), sA = Math.sin(A), K = .2;
-        const back = Array.from({ length: 16 }, () => []);
-        const front = Array.from({ length: 16 }, () => []);
-        let last = performance.now(), ringA = 0;
-
-        function poly(list, id, rad, k, th, d) {
-            const a1 = th - d * .5, a2 = th - d;
-            const x0 = rad * Math.cos(th), y0 = rad * Math.sin(th) * k;
-            const x1 = rad * Math.cos(a1), y1 = rad * Math.sin(a1) * k;
-            const x2 = rad * Math.cos(a2), y2 = rad * Math.sin(a2) * k;
-            list[id].push(
-                cx + x0 * cA - y0 * sA, cy + x0 * sA + y0 * cA,
-                cx + x1 * cA - y1 * sA, cy + x1 * sA + y1 * cA,
-                cx + x2 * cA - y2 * sA, cy + x2 * sA + y2 * cA);
-        }
-        function strokeLists(lists, w, am, clear) {
-            ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = w * dpr;
-            for (let id = 0; id < 16; id++) {
-                const seg = lists[id]; if (!seg.length) continue;
-                const col = COLS[id >> 2];
-                ctx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${(LV[id & 3] * am).toFixed(3)})`;
-                ctx.beginPath();
-                for (let i = 0; i < seg.length; i += 6) { ctx.moveTo(seg[i], seg[i + 1]); ctx.lineTo(seg[i + 2], seg[i + 3]); ctx.lineTo(seg[i + 4], seg[i + 5]); }
-                ctx.stroke();
-                if (clear) seg.length = 0;
-            }
-        }
-
-        function frame(now) {
-            if (my !== token || !cv.isConnected) return;
-            if (document.hidden || !cv.clientWidth) { last = now || performance.now(); raf = requestAnimationFrame(frame); return; }
-            if (W !== Math.round(cv.clientWidth * dpr)) size();
-            const dt = Math.min(.05, ((now || last) - last) / 1000); last = now || last;
-            ringA += dt * .5;
-
-            for (let i = 0; i < P.length; i++) {
-                const p = P[i];
-                p.th += p.om * dt;
-                const th = p.th, s = Math.sin(th), d = p.om * .45;
-                const dop = .5 + .5 * Math.cos(th - .6);
-                const inner = 1 - (p.rn - 1.32) / 2.2;
-                const a = (.12 + .5 * dop) * (.35 + .65 * inner) * p.k;
-                const lv = Math.min(3, Math.floor(a / .14));
-                const id = p.c * 4 + lv;
-                const rr = p.rn * R;
-                if (s > 0) {
-                    poly(front, id, rr, K, th, d);
-                    poly(back, id, R * (1.03 + (p.rn - 1.25) * .30), 1, th, d);
-                } else {
-                    poly(back, id, rr, K, th, d);
-                    poly(back, id, R * (1.03 + (p.rn - 1.25) * .36), 1, th, d);
-                }
-            }
-
-            ctx.clearRect(0, 0, W, H);
-            // quầng sáng mờ phía sau
-            ctx.globalCompositeOperation = 'source-over';
-            const g = ctx.createRadialGradient(cx, cy, R * .9, cx, cy, R * 2.6);
-            g.addColorStop(0, 'rgba(255,200,236,.30)'); g.addColorStop(.5, 'rgba(192,132,252,.10)'); g.addColorStop(1, 'rgba(192,132,252,0)');
-            ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-
-            // lớp sau: vòng cung bẻ cong + nửa đĩa phía sau
-            ctx.globalCompositeOperation = 'lighter';
-            strokeLists(back, 5, .15, false); strokeLists(back, 1.1, 1, true);
-
-            // hố đen + vòng photon
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.fillStyle = '#050109';
-            ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832); ctx.fill();
-            const rg = ctx.createRadialGradient(cx, cy, R * .72, cx, cy, R);
-            rg.addColorStop(0, 'rgba(249,168,212,0)'); rg.addColorStop(1, 'rgba(249,168,212,.22)');
-            ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832); ctx.fill();
-            ctx.shadowColor = 'rgba(255,190,232,.95)'; ctx.shadowBlur = 14 * dpr;
-            ctx.strokeStyle = 'rgba(255,236,248,.8)'; ctx.lineWidth = 1.5 * dpr;
-            ctx.beginPath(); ctx.arc(cx, cy, R * 1.005, 0, 6.2832); ctx.stroke();
-            ctx.strokeStyle = 'rgba(255,255,255,.98)'; ctx.lineWidth = 2.2 * dpr;
-            ctx.beginPath(); ctx.arc(cx, cy, R * 1.005, ringA, ringA + 1.5); ctx.stroke();
-            ctx.shadowBlur = 0;
-
-            // lớp trước: nửa đĩa phía trước đi ngang qua hố đen
-            ctx.globalCompositeOperation = 'lighter';
-            strokeLists(front, 5, .15, false); strokeLists(front, 1.1, 1.15, true);
-            ctx.globalCompositeOperation = 'source-over';
-
-            if (!REDUCE) raf = requestAnimationFrame(frame);
-        }
-        raf = requestAnimationFrame(frame);
-    };
 })();
 </script>
 
