@@ -361,7 +361,7 @@
         /* ===== SẢNH (HOME) + CHUYỂN TRANG MƯỢT ===== */
         #pageProgress{position:fixed;top:0;left:0;right:0;height:3px;z-index:10000;transform-origin:left center;transform:scaleX(0);opacity:0;background:linear-gradient(90deg,#a855f7,#ff5ce1,#fbbf24);box-shadow:0 0 12px rgba(255,92,225,.8);pointer-events:none}
         .sec{scroll-margin-top:96px}
-        .glass-card{background:rgba(18,11,28,.82);border:1px solid rgba(168,85,247,.22);border-radius:1.5rem;box-shadow:0 20px 60px rgba(0,0,0,.45);backdrop-filter:blur(8px)}
+        .glass-card{background:rgba(18,11,28,.82);border:1px solid rgba(168,85,247,.22);border-radius:1.5rem;box-shadow:0 20px 60px rgba(0,0,0,.45)}
         .home-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;font-size:12px;font-weight:800;color:#f1e8fb;background:rgba(255,255,255,.04);border:1px solid rgba(168,85,247,.28)}
         .home-badge .dot{width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;animation:dotPulse 1.8s ease-in-out infinite}
         .grad-text{background:linear-gradient(90deg,#ff7ae8 0%,#ff9a6b 55%,#fbbf24 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
@@ -405,15 +405,13 @@
         .play .chart-dot{animation:dotPop .5s cubic-bezier(.2,.9,.3,1.4) forwards}
         .play .chart-lbl{animation:fadeIn .5s ease forwards}
         /* phát sáng nhịp thở cho từng điểm (bắt đầu sau khi điểm hiện ra) */
-        .chart-dot{--c:#fff}
-        .chart-halo{transform-box:fill-box;transform-origin:center;opacity:0;fill:var(--c);pointer-events:none}
-        .play .chart-dot{animation:dotPop .5s cubic-bezier(.2,.9,.3,1.4) forwards,dotGlow 2.6s ease-in-out infinite;animation-delay:var(--pd,0s),calc(var(--pd,0s) + .6s)}
+        .chart-dot{--c:#fff;filter:drop-shadow(0 0 3px var(--c))}
+        .chart-halo{transform-box:fill-box;transform-origin:center;opacity:0;fill:var(--c);pointer-events:none;will-change:transform,opacity}
+        .play .chart-dot{animation:dotPop .5s cubic-bezier(.2,.9,.3,1.4) forwards;animation-delay:var(--pd,0s)}
         .play .chart-halo{animation:haloPulse 2.6s ease-out infinite;animation-delay:calc(var(--pd,0s) + .6s)}
-        .play .chart-line{filter:drop-shadow(0 0 2px rgba(252,215,122,.18));animation:drawLine 1.6s cubic-bezier(.4,0,.2,1) .5s forwards,lineGlow 2.6s ease-in-out 2.1s infinite}
-        @keyframes dotGlow{0%,100%{filter:drop-shadow(0 0 1px var(--c))}50%{filter:drop-shadow(0 0 4px var(--c))}}
-        @keyframes haloPulse{0%{opacity:.22;transform:scale(1)}70%,100%{opacity:0;transform:scale(2.6)}}
-        @keyframes lineGlow{0%,100%{filter:drop-shadow(0 0 1px rgba(252,215,122,.12))}50%{filter:drop-shadow(0 0 3px rgba(252,215,122,.3))}}
-        @media (prefers-reduced-motion:reduce){.play .chart-dot,.play .chart-halo,.play .chart-line{animation-iteration-count:1}}
+        .play .chart-line{filter:drop-shadow(0 0 2px rgba(252,215,122,.18))}
+        @keyframes haloPulse{0%{opacity:.28;transform:scale(1)}70%,100%{opacity:0;transform:scale(2.8)}}
+        @media (prefers-reduced-motion:reduce){.play .chart-halo{animation-iteration-count:1}}
         @keyframes drawLine{to{stroke-dashoffset:0}}
         @keyframes dotPop{to{opacity:1;transform:scale(1)}}
         /* quy trình test */
@@ -444,15 +442,21 @@
    ✨ NÂNG CẤP GIAO DIỆN (FX LAYER) — thêm vào cuối <style>
    ===================================================================== */
 html { scroll-behavior: smooth; }
+/* PERF: tắt backdrop-filter (tốn GPU nhất), bù bằng nền đặc hơn một chút */
+.backdrop-blur-md, .backdrop-blur-sm { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+nav > div.backdrop-blur-md { background-color: rgba(15,7,22,.94) !important; }
+#playerModal.backdrop-blur-sm, #infoModal.backdrop-blur-sm { background-color: rgba(0,0,0,.8) !important; }
+.float-deco { will-change: transform; }
+.fx-canvas, .fx-bg { contain: strict; }
 ::selection { background: rgba(217,70,239,.55); color: #fff; }
 :focus-visible { outline: 2px solid #ff5ce1; outline-offset: 2px; border-radius: 8px; }
 
 /* ---------- Nền động: aurora + lưới + hạt pixel ---------- */
 .fx-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.fx-bg .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .5; will-change: transform; }
-.fx-bg .o1 { width: 560px; height: 560px; left: -140px; top: -120px; background: #c026d3; animation: orbA 22s ease-in-out infinite alternate; }
-.fx-bg .o2 { width: 520px; height: 520px; right: -160px; top: 25%; background: #7c3aed; opacity: .42; animation: orbB 26s ease-in-out infinite alternate; }
-.fx-bg .o3 { width: 440px; height: 440px; left: 30%; bottom: -200px; background: #db2777; opacity: .28; animation: orbC 30s ease-in-out infinite alternate; }
+.fx-bg .orb { position: absolute; border-radius: 50%; opacity: .5; will-change: transform; transform: translateZ(0); }
+.fx-bg .o1 { width: 560px; height: 560px; left: -140px; top: -120px; background: radial-gradient(circle, #c026d3 0%, rgba(192,38,211,.55) 30%, rgba(192,38,211,0) 68%); animation: orbA 22s ease-in-out infinite alternate; }
+.fx-bg .o2 { width: 520px; height: 520px; right: -160px; top: 25%; background: radial-gradient(circle, #7c3aed 0%, rgba(124,58,237,.55) 30%, rgba(124,58,237,0) 68%); opacity: .42; animation: orbB 26s ease-in-out infinite alternate; }
+.fx-bg .o3 { width: 440px; height: 440px; left: 30%; bottom: -200px; background: radial-gradient(circle, #db2777 0%, rgba(219,39,119,.55) 30%, rgba(219,39,119,0) 68%); opacity: .28; animation: orbC 30s ease-in-out infinite alternate; }
 @keyframes orbA { to { transform: translate(180px, 140px) scale(1.15); } }
 @keyframes orbB { to { transform: translate(-220px, 120px) scale(.9); } }
 @keyframes orbC { to { transform: translate(160px, -120px) scale(1.2); } }
@@ -494,6 +498,7 @@ nav.scrolled > div {
     animation: gradMove 6s ease-in-out infinite alternate;
     filter: drop-shadow(0 0 22px rgba(255,92,225,.28));
 }
+@media (max-width: 639px) { .grad-text { animation: none !important; filter: none; } }
 @keyframes gradMove { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
 
 /* ---------- Nút hero: quét sáng ---------- */
@@ -522,7 +527,7 @@ nav.scrolled > div {
 .fx-stat {
     min-width: 108px; padding: 12px 18px; border-radius: 16px;
     background: rgba(255,255,255,.035); border: 1px solid rgba(168,85,247,.22);
-    backdrop-filter: blur(6px); transition: transform .3s cubic-bezier(.2,.8,.2,1), border-color .3s;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), border-color .3s;
 }
 .fx-stat:hover { transform: translateY(-3px); border-color: rgba(217,70,239,.6); }
 .fx-stat b { display: block; font-size: 26px; font-weight: 800; line-height: 1.1; color: #fff; }
@@ -558,6 +563,7 @@ nav.scrolled > div {
 .row-r2 { --rc: #cbd5e1; }
 .row-r3 { --rc: #fb923c; }
 .row-r2::after, .row-r3::after { animation-duration: 6s; opacity: .8; }
+.row-r1::after,.row-r2::after,.row-r3::after{will-change:transform}
 .row-r1 .font-extrabold.truncate { text-shadow: 0 0 18px rgba(250,204,21,.45); }
 
 .horizontal-scroll-container .rounded-full { transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s; }
@@ -575,7 +581,7 @@ nav.scrolled > div {
 
 /* ---------- Popup mở mượt ---------- */
 @keyframes fxFade { from { opacity: 0; } }
-@keyframes fxPop { from { opacity: 0; transform: translateY(24px) scale(.94); filter: blur(6px); } }
+@keyframes fxPop { from { opacity: 0; transform: translateY(24px) scale(.94); } }
 #playerModal:not(.hidden), #infoModal:not(.hidden) { animation: fxFade .25s ease; }
 #playerModal:not(.hidden) > div > div, #infoModal:not(.hidden) > div { animation: fxPop .45s cubic-bezier(.2,.9,.3,1.12); }
 #modalSkinImg { animation: skinFloat 4s ease-in-out infinite; }
@@ -601,7 +607,6 @@ footer::before {
 }
 
 @media (max-width: 639px) {
-    .fx-bg .orb { filter: blur(70px); }
     .fx-stat { flex: 1; min-width: 0; padding: 10px 12px; }
     .fx-stat b { font-size: 21px; }
     .fx-top { right: 14px; bottom: 14px; }
@@ -1187,7 +1192,7 @@ footer::before {
                 container.innerHTML = `
                     <div id="userMenuContainer" class="relative inline-block text-left select-none">
                         <button onclick="toggleUserMenu(event)" type="button" class="flex items-center gap-3 px-3 py-1.5 bg-[#12081c] hover:bg-[#1d1030] border border-gray-800/80 rounded-xl transition-all cursor-pointer text-white">
-                            <img src="${avatarUrl}" alt="${displayName}" class="w-8 h-8 rounded-lg object-cover bg-[#1d1030]" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"/>
+                            <img loading="lazy" decoding="async" src="${avatarUrl}" alt="${displayName}" class="w-8 h-8 rounded-lg object-cover bg-[#1d1030]" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"/>
                             <div class="flex flex-col text-left leading-tight">
                                 <span class="font-bold text-xs text-white">${displayName}</span>
                                 <span class="text-[10px] text-gray-400">@${username}</span>
@@ -1197,7 +1202,7 @@ footer::before {
                         <div id="userMenuDropdown" class="hidden hidden-anim menu-dropdown-anim absolute right-0 mt-2 w-64 bg-[#12081c] border border-gray-800 rounded-2xl shadow-2xl z-50 p-4">
                             <div class="flex items-center justify-between pb-3 border-b border-gray-800/80">
                                 <div class="flex items-center gap-3">
-                                    <img src="${avatarUrl}" alt="${displayName}" class="w-10 h-10 rounded-xl object-cover bg-[#1d1030]" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"/>
+                                    <img loading="lazy" decoding="async" src="${avatarUrl}" alt="${displayName}" class="w-10 h-10 rounded-xl object-cover bg-[#1d1030]" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'"/>
                                     <div class="flex flex-col text-left leading-tight">
                                         <span class="font-bold text-sm text-white">${displayName}</span>
                                         <span class="text-xs text-gray-400">@${username}</span>
@@ -1578,7 +1583,7 @@ footer::before {
                         return `
                             <div class="tier-col-card flex flex-row items-center justify-between px-3.5 py-2.5 cursor-pointer group" onclick="openPlayerModal('${p.username}')">
                                 <div class="flex flex-row items-center gap-2.5 min-w-0">
-                                    <img src="${avatarUrl}" class="w-11 h-11 object-contain flex-shrink-0" alt="${p.username}" onerror="this.src='https://vzge.me/bust/220/Steve.png'">
+                                    <img loading="lazy" decoding="async" src="${avatarUrl}" class="w-11 h-11 object-contain flex-shrink-0" alt="${p.username}" onerror="this.src='https://vzge.me/bust/220/Steve.png'">
                                     <span class="font-bold text-white text-sm truncate group-hover:text-fuchsia-300 transition-colors">${p.username}</span>
                                 </div>
                                 <i class="fa-solid fa-angles-up text-xs text-slate-400 group-hover:text-fuchsia-400 transition-colors flex-shrink-0 pl-1"></i>
@@ -1692,7 +1697,7 @@ footer::before {
             return `
                 <div draggable="true" ondragstart="handleDragStart(event, '${player.username}')" 
                      class="drag-item bg-[#1d1030] hover:border-fuchsia-400 p-1.5 rounded-lg flex items-center space-x-2 cursor-grab active:cursor-grabbing shadow-sm transition-all hover:scale-105">
-                    <img src="${skinUrl}" class="w-8 h-8 object-contain">
+                    <img loading="lazy" decoding="async" src="${skinUrl}" class="w-8 h-8 object-contain">
                     <span class="text-xs font-bold text-slate-200 pr-1">${player.username}</span>
                 </div>
             `;
@@ -1844,7 +1849,7 @@ footer::before {
             if (!REDUCED) {
                 try {
                     await cur.animate(
-                        [{ opacity: 1, transform: 'none', filter: 'blur(0px)' }, { opacity: 0, transform: 'translateY(-16px) scale(.985)', filter: 'blur(6px)' }],
+                        [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-16px) scale(.985)' }],
                         { duration: 300, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' }
                     ).finished;
                 } catch (e) {}
@@ -1865,7 +1870,7 @@ footer::before {
 
             if (!REDUCED) {
                 next.animate(
-                    [{ opacity: 0, transform: 'translateY(26px) scale(.99)', filter: 'blur(8px)' }, { opacity: 1, transform: 'none', filter: 'blur(0px)' }],
+                    [{ opacity: 0, transform: 'translateY(26px) scale(.99)' }, { opacity: 1, transform: 'none' }],
                     { duration: 560, easing: EASE_OUT }
                 );
                 staggerIn(next);
@@ -1908,7 +1913,7 @@ footer::before {
                 <div class="top-row ${i === 0 ? 't1' : ''} ${animate ? 'row-in' : ''}" style="animation-delay:${i * 70}ms" onclick="openPlayerModal('${x.p.username}')">
                     <span class="rk">#${i + 1}</span>
                     <i class="fa-solid fa-trophy" style="color:${TROPHY_COLORS[i]}"></i>
-                    <img class="sk" src="https://vzge.me/bust/220/${x.p.username}" alt="${x.p.username}" onerror="this.src='https://vzge.me/bust/220/Steve'">
+                    <img class="sk" loading="lazy" decoding="async" src="https://vzge.me/bust/220/${x.p.username}" alt="${x.p.username}" onerror="this.src='https://vzge.me/bust/220/Steve'">
                     <div class="min-w-0"><div class="nm truncate">${x.p.username}</div><div class="pt">${x.s} points</div></div>
                 </div>`).join('');
         }
@@ -1954,21 +1959,31 @@ footer::before {
 
     // 1) Spotlight theo con trỏ chuột trên thẻ
     const SPOT = '.glass-card,.step-card,.player-row,.top-row,.faq-item,.home-mode,.tier-col-card';
+    let _pm = null, _pr = 0;
     document.addEventListener('pointermove', (e) => {
-        const t = e.target.closest && e.target.closest(SPOT);
-        if (!t) return;
-        const r = t.getBoundingClientRect();
-        t.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-        t.style.setProperty('--my', (e.clientY - r.top) + 'px');
+        if (e.pointerType === 'touch') return;
+        _pm = e;
+        if (_pr) return;
+        _pr = requestAnimationFrame(() => {
+            _pr = 0;
+            const ev = _pm; if (!ev) return;
+            const t = ev.target.closest && ev.target.closest(SPOT);
+            if (!t) return;
+            const r = t.getBoundingClientRect();
+            t.style.setProperty('--mx', (ev.clientX - r.left) + 'px');
+            t.style.setProperty('--my', (ev.clientY - r.top) + 'px');
+        });
     }, { passive: true });
 
     // 2) Navbar đậm hơn khi cuộn + nút lên đầu trang
     const nav = document.querySelector('nav');
     const topBtn = document.getElementById('fxTop');
+    let _sa = null, _sb = null;
     function onScroll() {
         const y = window.scrollY;
-        if (nav) nav.classList.toggle('scrolled', y > 24);
-        if (topBtn) topBtn.classList.toggle('show', y > 420);
+        const a = y > 24, b = y > 420;
+        if (a !== _sa) { _sa = a; if (nav) nav.classList.toggle('scrolled', a); }
+        if (b !== _sb) { _sb = b; if (topBtn) topBtn.classList.toggle('show', b); }
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
@@ -1981,10 +1996,10 @@ footer::before {
         let W, H, parts = [], raf, running = true;
         const COLORS = ['255,92,225', '168,85,247', '251,191,36', '255,255,255'];
         function resize() {
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const dpr = 1;
             W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr;
             cv.style.width = innerWidth + 'px'; cv.style.height = innerHeight + 'px';
-            const n = innerWidth < 640 ? 22 : 46;
+            const n = innerWidth < 640 ? 16 : 36;
             parts = Array.from({ length: n }, () => spawn(true, dpr));
         }
         function spawn(rand, dpr) {
@@ -2001,7 +2016,7 @@ footer::before {
         function frame() {
             if (!running) return;
             ctx.clearRect(0, 0, W, H);
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const dpr = 1;
             for (let i = 0; i < parts.length; i++) {
                 const p = parts[i];
                 p.y -= p.v; p.x += p.dx + Math.sin(p.t += .01) * .15 * dpr;
