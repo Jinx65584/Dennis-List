@@ -9,7 +9,7 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- html2canvas -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <!-- Google Font: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1541,7 +1541,7 @@ footer::before {
                 return `
                     <div class="${hostClass} flex flex-col items-center gap-1.5 flex-shrink-0 opacity-85 ${extraClass}" ${titleAttr}>
                         <div class="w-10 h-10 rounded-full tier-circle-empty flex items-center justify-center">
-                            <img src="${mode.icon}" class="w-5 h-5 object-contain opacity-55" alt="${mode.name}">
+                            <img loading="lazy" decoding="async" src="${mode.icon}" class="w-5 h-5 object-contain opacity-55" alt="${mode.name}">
                         </div>
                         <span class="tier-label-empty text-xs font-black px-2 py-0.5 rounded leading-none">-</span>
                         ${tipHtml}
@@ -1551,7 +1551,7 @@ footer::before {
             return `
                 <div class="${hostClass} flex flex-col items-center gap-1.5 flex-shrink-0 ${extraClass}" ${titleAttr}>
                     <div class="w-10 h-10 rounded-full ${tClass.circle} flex items-center justify-center shadow-sm">
-                        <img src="${mode.icon}" class="w-5 h-5 object-contain" alt="${mode.name}">
+                        <img loading="lazy" decoding="async" src="${mode.icon}" class="w-5 h-5 object-contain" alt="${mode.name}">
                     </div>
                     <span class="${tClass.label} text-xs font-black px-2 py-0.5 rounded leading-none tracking-tight shadow-sm">${tierVal}</span>
                     ${tipHtml}
@@ -1606,7 +1606,7 @@ footer::before {
                     return `
                         <div class="player-row lb-grid row-r${rank <= 3 ? rank : 0} flex flex-row items-center pr-3.5" onclick="openPlayerModal('${player.username}')">
                             <div class="rank-panel">
-                                <img src="${skinUrl}" alt="${player.username}" onerror="this.src='https://vzge.me/bust/220/Steve'">
+                                <img loading="lazy" decoding="async" src="${skinUrl}" alt="${player.username}" onerror="this.src='https://vzge.me/bust/220/Steve'">
                                 <span class="rank-num">${rank}</span>
                             </div>
                             <div class="min-w-0 py-3 pl-1">
@@ -2199,6 +2199,120 @@ footer::before {
             return r;
         };
     }
+})();
+</script>
+
+<style>
+/* 1) Bỏ background-attachment: fixed (gây repaint toàn trang mỗi lần cuộn).
+      Nền động .fx-bg đã đảm nhiệm việc này. */
+body { background-attachment: scroll !important; }
+
+/* 2) Hàng người chơi: chỉ render khi nằm gần khung nhìn.
+      Với 100 hàng x ~10 huy hiệu, đây là mức tăng mượt lớn nhất khi cuộn. */
+.player-row {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 92px;
+    backface-visibility: visible;
+    will-change: auto;
+}
+.tier-col-card { content-visibility: auto; contain-intrinsic-size: auto 60px; }
+
+/* 3) Viền xoay conic-gradient (@property --ang) bắt buộc repaint MỖI FRAME x3 hàng.
+      Thay bằng viền tĩnh + nhấp nháy opacity (chạy trên GPU). */
+.row-r1::after, .row-r2::after, .row-r3::after {
+    animation: none !important;
+    background: linear-gradient(135deg, var(--rc, #fbbf24), transparent 40%, transparent 65%, var(--rc, #fbbf24));
+    opacity: .7;
+}
+.row-r1::after { animation: rowPulse 3.2s ease-in-out infinite !important; will-change: opacity; }
+@keyframes rowPulse { 50% { opacity: .3; } }
+
+/* 4) Thiên hà Top 1: blur(9px) trên layer đang xoay = tốn GPU nặng. Bỏ blur + bỏ animation opacity thứ 2 của sao. */
+.t1-garm { filter: none !important; }
+.t1-gstars { animation: t1Spin 90s linear infinite !important; }
+.t1-bgskin { filter: none !important; opacity: .1 !important; }
+
+/* 5) Bỏ drop-shadow filter trên ảnh trong danh sách (mỗi ảnh = 1 pass filter) */
+.rank-panel img, .top-row img.sk { filter: none !important; }
+
+/* 6) Bỏ spotlight theo chuột trên hàng người chơi (đã có hiệu ứng hover riêng) */
+.player-row::before, .tier-col-card::before { display: none !important; }
+
+/* 7) transition: all -> chỉ thuộc tính cần thiết */
+.mode-btn { transition: background-color .2s ease !important; }
+.chip { transition: border-color .2s ease, background-color .2s ease, transform .2s ease !important; }
+
+/* 8) Tạm dừng toàn bộ animation khi chuyển tab trình duyệt / hero ra khỏi màn hình */
+html.paused *, html.paused *::before, html.paused *::after { animation-play-state: paused !important; }
+.t1-hero.off *, .t1-hero.off *::before, .t1-hero.off *::after { animation-play-state: paused !important; }
+
+/* 9) Chế độ "lite" cho máy yếu / điện thoại: tắt hiệu ứng nền nặng */
+html.lite .fx-bg .orb,
+html.lite .t1-gtilt i,
+html.lite .float-deco,
+html.lite .grad-text,
+html.lite .t1-spark,
+html.lite .chart-halo { animation: none !important; }
+html.lite #fxCanvas { display: none !important; }
+html.lite .fx-bg .orb { opacity: .25; }
+html.lite .glass-card::before, html.lite .step-card::before,
+html.lite .top-row::before, html.lite .faq-item::before,
+html.lite .home-mode::before { display: none !important; }
+html.lite .player-row:hover { transform: none !important; }
+</style>
+
+<script>
+(function () {
+    const root = document.documentElement;
+
+    /* A) Phát hiện máy yếu / di động -> bật chế độ lite */
+    const weak = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+                 (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+                 /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
+    if (weak) root.classList.add('lite');
+
+    /* B) Dừng animation khi tab bị ẩn */
+    document.addEventListener('visibilitychange', () => root.classList.toggle('paused', document.hidden));
+
+    window.addEventListener('DOMContentLoaded', () => {
+        /* C) Debounce ô tìm kiếm: trước đây mỗi phím gõ = render lại cả bảng bằng innerHTML.
+              Clone node để gỡ listener cũ rồi gắn listener có debounce. */
+        const old = document.getElementById('searchInput');
+        if (old) {
+            const input = old.cloneNode(true);
+            old.replaceWith(input);
+            let t;
+            input.addEventListener('input', () => {
+                clearTimeout(t);
+                t = setTimeout(() => {
+                    searchQuery = input.value.trim();   // biến global của code gốc
+                    renderLeaderboard();
+                }, 160);
+            });
+        }
+
+        /* D) Dừng animation hero Top 1 khi cuộn khỏi màn hình */
+        const hero = document.getElementById('top1Hero');
+        if (hero && 'IntersectionObserver' in window) {
+            new IntersectionObserver(es => es.forEach(e => hero.classList.toggle('off', !e.isIntersecting)))
+                .observe(hero);
+        }
+    });
+
+    /* E) Gộp nhiều lần gọi renderLeaderboard trong cùng 1 frame thành 1 lần
+          (tránh render đôi khi đổi tab / đổi region / tải dữ liệu cùng lúc). */
+    if (typeof renderLeaderboard === 'function') {
+        const orig = renderLeaderboard;
+        let queued = false;
+        window.renderLeaderboard = function () {
+            if (queued) return;
+            queued = true;
+            requestAnimationFrame(() => { queued = false; orig.apply(this, arguments); });
+        };
+    }
+
+    /* F) Rút ngắn vòng lặp spotlight: bỏ qua hoàn toàn trên thiết bị cảm ứng (đã có sẵn),
+          và ngừng cập nhật khi chuột đứng yên là mặc định của rAF — không cần thêm. */
 })();
 </script>
 
