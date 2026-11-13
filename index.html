@@ -12,6 +12,10 @@
     <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <!-- Google Font: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://render.crafty.gg" crossorigin>
+    <link rel="preconnect" href="https://cdn.discordapp.com" crossorigin>
+    <link rel="preconnect" href="https://sgp.cloud.appwrite.io" crossorigin>
+    <link rel="dns-prefetch" href="https://i.ibb.co">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600;700&display=swap" rel="stylesheet">
@@ -1397,7 +1401,7 @@ footer::before {
                         return {
                             id: doc.$id,
                             username: doc.username,
-                            avatarUrl: doc.avatarUrl || doc.skin || `https://vzge.me/bust/220/${doc.username}.png`,
+                            avatarUrl: doc.avatarUrl || doc.skin || `https://render.crafty.gg/3d/bust/${doc.username}`,
                             region: (doc.region || DEFAULT_REGION).toUpperCase(),
                             tiers: parsedTiers || {},
                             points: calculatePlayerPoints(parsedTiers)
@@ -1597,7 +1601,7 @@ footer::before {
 
                 container.innerHTML = filtered.map((player) => {
                     const rank = rankMap[player.username] || 1;
-                    const skinUrl = `https://vzge.me/bust/220/${player.username}`;
+                    const skinUrl = `https://render.crafty.gg/3d/bust/${player.username}`;
                     const title = getCombatTitle(player.points);
                     const nameColor = ({ 1: '#facc15', 2: '#cbd5e1', 3: '#d48f54' })[rank] || '#ffffff';
 
@@ -1606,7 +1610,7 @@ footer::before {
                     return `
                         <div class="player-row lb-grid row-r${rank <= 3 ? rank : 0} flex flex-row items-center pr-3.5" onclick="openPlayerModal('${player.username}')">
                             <div class="rank-panel">
-                                <img loading="lazy" decoding="async" src="${skinUrl}" alt="${player.username}" onerror="this.src='https://vzge.me/bust/220/Steve'">
+                                <img loading="lazy" decoding="async" src="${skinUrl}" alt="${player.username}" onerror="this.src='https://render.crafty.gg/3d/bust/Steve'">
                                 <span class="rank-num">${rank}</span>
                             </div>
                             <div class="min-w-0 py-3 pl-1">
@@ -1617,7 +1621,7 @@ footer::before {
                                 </div>
                             </div>
                             <div class="lb-region flex flex-col items-center gap-1">
-                                <span class="region-pill">${player.region}</span>
+                                <span class="region-pill rg-${player.region}">${player.region}</span>
                                 <i class="fa-solid fa-earth-asia text-[10px] text-slate-500"></i>
                             </div>
                             <!-- THANH NGANG VUỐT CHO HUY HIỆU TIER -->
@@ -1662,11 +1666,11 @@ footer::before {
                     const matchedPlayers = filtered.filter(p => p.tiers && p.tiers[activeTab] && validKeys.includes(p.tiers[activeTab]));
 
                     const playerRowsHtml = matchedPlayers.map(p => {
-                        const avatarUrl = p.avatarUrl || `https://vzge.me/bust/220/${p.username}.png`;
+                        const avatarUrl = p.avatarUrl || `https://render.crafty.gg/3d/bust/${p.username}`;
                         return `
                             <div class="tier-col-card flex flex-row items-center justify-between px-3.5 py-2.5 cursor-pointer group" onclick="openPlayerModal('${p.username}')">
                                 <div class="flex flex-row items-center gap-2.5 min-w-0">
-                                    <img loading="lazy" decoding="async" src="${avatarUrl}" class="w-11 h-11 object-contain flex-shrink-0" alt="${p.username}" onerror="this.src='https://vzge.me/bust/220/Steve.png'">
+                                    <img loading="lazy" decoding="async" src="${avatarUrl}" class="w-11 h-11 object-contain flex-shrink-0" alt="${p.username}" onerror="this.src='https://render.crafty.gg/3d/bust/Steve'">
                                     <span class="font-bold text-white text-sm truncate group-hover:text-fuchsia-300 transition-colors">${p.username}</span>
                                 </div>
                                 <i class="fa-solid fa-angles-up text-xs text-slate-400 group-hover:text-fuchsia-400 transition-colors flex-shrink-0 pl-1"></i>
@@ -1705,13 +1709,14 @@ footer::before {
 
             document.getElementById('modalUsername').innerText = player.username;
             document.getElementById('modalRegion').innerText = player.region;
+            document.getElementById('modalRegion').className = 'region-pill rg-' + player.region;
             const titleEl = document.getElementById('modalTitle');
             titleEl.style.color = title.color;
             titleEl.style.background = title.bg;
             titleEl.innerHTML = `${titleIconHtml(title)}${title.name}`;
             const skinEl = document.getElementById('modalSkinImg');
-            skinEl.onerror = () => { skinEl.onerror = null; skinEl.src = `https://vzge.me/bust/300/Steve`; };
-            skinEl.src = `https://vzge.me/bust/300/${player.username}`;
+            skinEl.onerror = () => { skinEl.onerror = null; skinEl.src = `https://render.crafty.gg/3d/bust/Steve`; };
+            skinEl.src = `https://render.crafty.gg/3d/bust/${player.username}`;
             document.getElementById('modalRankNum').innerText = `${rankIdx}.`;
             document.getElementById('modalPoints').innerText = `(${player.points} points)`;
 
@@ -1776,7 +1781,7 @@ footer::before {
         }
 
         function createDragCardHtml(player) {
-            const skinUrl = `https://vzge.me/bust/220/${player.username}`;
+            const skinUrl = `https://render.crafty.gg/3d/bust/${player.username}`;
             return `
                 <div draggable="true" ondragstart="handleDragStart(event, '${player.username}')" 
                      class="drag-item bg-[#1d1030] hover:border-fuchsia-400 p-1.5 rounded-lg flex items-center space-x-2 cursor-grab active:cursor-grabbing shadow-sm transition-all hover:scale-105">
@@ -1996,7 +2001,7 @@ footer::before {
                 <div class="top-row ${i === 0 ? 't1' : ''} ${animate ? 'row-in' : ''}" style="animation-delay:${i * 70}ms" onclick="openPlayerModal('${x.p.username}')">
                     <span class="rk">#${i + 1}</span>
                     <i class="fa-solid fa-trophy" style="color:${TROPHY_COLORS[i]}"></i>
-                    <img class="sk" loading="lazy" decoding="async" src="https://vzge.me/bust/220/${x.p.username}" alt="${x.p.username}" onerror="this.src='https://vzge.me/bust/220/Steve'">
+                    <img class="sk" loading="lazy" decoding="async" src="https://render.crafty.gg/3d/bust/${x.p.username}" alt="${x.p.username}" onerror="this.src='https://render.crafty.gg/3d/bust/Steve'">
                     <div class="min-w-0"><div class="nm truncate">${x.p.username}</div><div class="pt">${x.s} points</div></div>
                 </div>`).join('');
         }
@@ -2151,7 +2156,7 @@ footer::before {
 (function () {
     const POS = [[3,18,110,-62],[13,52,120,38],[24,10,100,20],[30,62,110,-20],[64,8,100,-28],[71,56,120,52],[81,16,110,-50],[90,48,100,24],[47,72,90,70],[55,2,90,-70],[7,76,100,-14],[91,78,100,-44]];
     let lastKey = '';
-    function skin(name, size) { return 'https://vzge.me/full/' + size + '/' + encodeURIComponent(name); }
+    function skin(name, size) { return 'https://render.crafty.gg/3d/full/' + encodeURIComponent(name); }
     function tierText(t) { return (t.startsWith('HT') ? 'High Tier ' : 'Low Tier ') + t.slice(-1); }
 
     window.renderTop1Hero = function () {
@@ -2184,7 +2189,7 @@ footer::before {
             ${sparks}
             <div class="t1-inner" onclick="openPlayerModal('${top.username}')">
                 <div class="t1-pill">#1</div>
-                <img class="t1-skin" src="${skin(top.username, 512)}" alt="${top.username}" onerror="this.onerror=null;this.src='https://vzge.me/full/512/Steve'">
+                <img class="t1-skin" src="${skin(top.username, 512)}" alt="${top.username}" onerror="this.onerror=null;this.src='https://render.crafty.gg/3d/bust/${encodeURIComponent(top.username)}'">
                 <div class="t1-name">${top.username}</div>
                 <div class="t1-sub">${sub}</div>
             </div>`;
@@ -2313,6 +2318,557 @@ html.lite .player-row:hover { transform: none !important; }
 
     /* F) Rút ngắn vòng lặp spotlight: bỏ qua hoàn toàn trên thiết bị cảm ứng (đã có sẵn),
           và ngừng cập nhật khi chuột đứng yên là mặc định của rAF — không cần thêm. */
+})();
+</script>
+
+<!-- ===================== ✨ UPGRADE v2: LỚP NÂNG CẤP GIAO DIỆN ===================== -->
+<style>
+/* ---------- Thanh tiến trình cuộn ---------- */
+#scrollBar{position:fixed;top:0;left:0;height:2px;width:100%;transform:scaleX(0);transform-origin:left;z-index:9998;background:linear-gradient(90deg,#a855f7,#ff5ce1,#fbbf24);box-shadow:0 0 10px rgba(255,92,225,.7);pointer-events:none}
+
+
+/* ---------- Parallax nền theo chuột (dùng thuộc tính translate, cộng dồn với animation sẵn có) ---------- */
+.fx-bg .o1{translate:calc(var(--px,0)*-46px) calc(var(--py,0)*-36px)}
+.fx-bg .o2{translate:calc(var(--px,0)*60px) calc(var(--py,0)*40px)}
+.fx-bg .o3{translate:calc(var(--px,0)*-30px) calc(var(--py,0)*50px)}
+.fx-grid{translate:calc(var(--px,0)*14px) calc(var(--py,0)*10px)}
+
+/* ---------- Nghiêng 3D cho thẻ ---------- */
+.step-card.tilt,.fx-stat.tilt{
+  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px)) !important;
+  transition:transform .25s ease-out,border-color .3s,box-shadow .3s !important;
+}
+
+/* ---------- Nút hero: từ tính + ripple ---------- */
+.hero-btn{transition:transform .25s cubic-bezier(.2,.8,.2,1),translate .2s ease-out,border-color .25s,box-shadow .25s}
+.chip,.m-nav,.mode-btn,.cmdk-btn,.home-mode{position:relative;overflow:hidden}
+.rip{position:absolute;border-radius:50%;background:rgba(255,255,255,.35);transform:scale(0);animation:ripple .6s ease-out forwards;pointer-events:none}
+@keyframes ripple{to{transform:scale(1);opacity:0}}
+
+/* ---------- Thanh chạy (marquee) các chế độ & điểm Tier ---------- */
+.mq{position:relative;overflow:hidden;margin:6px 0 10px;padding:14px 0;border-top:1px solid rgba(168,85,247,.18);border-bottom:1px solid rgba(168,85,247,.18);
+  background:rgba(255,255,255,.015);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.mq-track{display:flex;width:max-content;animation:mqRun 52s linear infinite}
+.mq:hover .mq-track{animation-play-state:paused}
+.mq-half{display:flex;gap:14px;padding-right:14px}
+.mq-i,.mq-t{display:inline-flex;align-items:center;gap:8px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.06em;white-space:nowrap}
+.mq-i{padding:7px 14px 7px 9px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#e9ddf7}
+.mq-i img{width:22px;height:22px;object-fit:contain}
+.mq-t{padding:7px 14px;border:1px solid rgba(250,204,21,.25);background:rgba(250,204,21,.06);color:#fde68a}
+.mq-t em{font-style:normal;color:#bfaedb;font-weight:700}
+@keyframes mqRun{to{transform:translateX(-50%)}}
+
+/* ---------- Đường sáng chạy trên viền thẻ & Top 1 ở trang chủ ---------- */
+.glass-card.orbit::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;z-index:2;
+  background:conic-gradient(from var(--ang),transparent 0 62%,rgba(168,85,247,.5) 76%,#ff5ce1 90%,#fbbf24 97%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
+  animation:spinAng 5s linear infinite}
+.glass-card.orbit{box-shadow:0 20px 60px rgba(0,0,0,.45),0 0 34px rgba(217,70,239,.12)}
+.top-row.t1{overflow:hidden}
+.top-row.t1::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.13) 50%,transparent 65%);transform:translateX(-100%);animation:shineX 4.5s ease-in-out infinite}
+@keyframes shineX{60%,100%{transform:translateX(100%)}}
+
+/* ---------- Danh hiệu lấp lánh ---------- */
+.title-badge{position:relative;overflow:hidden}
+.title-badge::after{content:'';position:absolute;inset:0;pointer-events:none;transform:translateX(-120%);
+  background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.3) 50%,transparent 70%)}
+.player-row:hover .title-badge::after,.pod:hover .title-badge::after{animation:tbShine 1.2s ease}
+#modalTitle::after{animation:tbShine 3.6s ease-in-out infinite}
+@keyframes tbShine{to{transform:translateX(120%)}}
+
+/* ---------- Popup người chơi: huy hiệu bật lên lần lượt ---------- */
+#modalTiersContainer>*{animation:badgeUp .5s cubic-bezier(.2,.9,.3,1.25) backwards}
+#modalTiersContainer>*:nth-child(1){animation-delay:.10s}
+#modalTiersContainer>*:nth-child(2){animation-delay:.14s}
+#modalTiersContainer>*:nth-child(3){animation-delay:.18s}
+#modalTiersContainer>*:nth-child(4){animation-delay:.22s}
+#modalTiersContainer>*:nth-child(5){animation-delay:.26s}
+#modalTiersContainer>*:nth-child(6){animation-delay:.30s}
+#modalTiersContainer>*:nth-child(7){animation-delay:.34s}
+#modalTiersContainer>*:nth-child(8){animation-delay:.38s}
+#modalTiersContainer>*:nth-child(9){animation-delay:.42s}
+#modalTiersContainer>*:nth-child(10){animation-delay:.46s}
+#modalRankBar{animation:fxPop .5s .08s cubic-bezier(.2,.9,.3,1.12) backwards}
+@keyframes badgeUp{from{opacity:0;transform:translateY(14px) scale(.7)}}
+
+/* ---------- Thanh cuộn gradient ---------- */
+::-webkit-scrollbar-thumb{background:linear-gradient(#a855f7,#d946ef)}
+
+/* ---------- PODIUM TOP 3 (tab Overall) ---------- */
+.pod-hero{position:relative;padding:26px 16px 0;border-bottom:1px solid rgba(255,255,255,.08);overflow:hidden;
+  background:radial-gradient(ellipse at 50% 100%,rgba(217,70,239,.2),transparent 65%)}
+.pod-head{display:flex;justify-content:center;align-items:center;gap:10px;font-size:11px;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:#bfaedb;margin-bottom:6px}
+.pod-head i{color:#fbbf24}
+.pod-grid{display:flex;justify-content:center;align-items:flex-end;gap:clamp(8px,2.4vw,22px);max-width:760px;margin:0 auto}
+.pod{flex:1;min-width:0;max-width:240px;display:flex;flex-direction:column;align-items:center;cursor:pointer;
+  animation:podRise .8s cubic-bezier(.2,.9,.3,1.1) var(--d,0s) backwards}
+.pod-card{position:relative;isolation:isolate;width:100%;display:flex;flex-direction:column;align-items:center;padding:12px 6px 14px;text-align:center}
+.pod-skin{height:clamp(96px,16vw,150px);width:auto;object-fit:contain;filter:drop-shadow(0 8px 10px rgba(0,0,0,.55));
+  animation:skinFloat 4s ease-in-out infinite;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.pr1 .pod-skin{height:clamp(120px,21vw,190px)}
+.pod:hover .pod-skin{transform:scale(1.07)}
+.pod-name{font-weight:800;font-size:clamp(14px,2.2vw,20px);color:#fff;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:6px}
+.pr1 .pod-name{color:#fde047;text-shadow:0 0 18px rgba(250,204,21,.45)}
+.pod-pts{font-size:12px;font-weight:700;color:#bfaedb;margin-top:6px}
+.pod-card .title-badge{margin-top:6px;max-width:100%}
+.pod-rk{position:absolute;top:6px;left:6px;font-weight:800;font-style:italic;font-size:12px;opacity:.65}
+.pod-crown{color:#facc15;font-size:22px;margin-bottom:-2px;filter:drop-shadow(0 0 8px rgba(250,204,21,.8));animation:crownBob 2.6s ease-in-out infinite}
+.pr1 .pod-card::after{content:'';position:absolute;left:50%;top:0;bottom:-10px;width:80%;transform:translateX(-50%);z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 70%,rgba(250,204,21,.24),transparent 65%)}
+.pod-base{width:100%;display:flex;align-items:center;justify-content:center;border-radius:14px 14px 0 0;font-weight:800;font-style:italic;font-size:30px;
+  color:rgba(255,255,255,.95);text-shadow:0 2px 0 rgba(0,0,0,.35);transform-origin:bottom;
+  animation:baseGrow .7s cubic-bezier(.2,.9,.3,1) calc(var(--d,0s) + .15s) backwards}
+.pr1 .pod-base{height:84px;background:linear-gradient(180deg,#f5c542,#b8801a)}
+.pr2 .pod-base{height:62px;background:linear-gradient(180deg,#8fb3c2,#4f7284)}
+.pr3 .pod-base{height:48px;background:linear-gradient(180deg,#db7a2c,#9a4a0d)}
+@keyframes podRise{from{opacity:0;transform:translateY(40px) scale(.94)}}
+@keyframes baseGrow{from{transform:scaleY(0)}}
+@keyframes crownBob{50%{transform:translateY(-4px) rotate(4deg)}}
+@media (max-width:639px){.pod-base{font-size:22px}.pr1 .pod-base{height:64px}.pr2 .pod-base{height:48px}.pr3 .pod-base{height:38px}}
+
+/* ---------- TÌM NHANH (Ctrl + K) ---------- */
+.cmdk-btn{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  color:#bfaedb;font-size:12px;font-weight:700;transition:border-color .2s,color .2s}
+.cmdk-btn:hover{border-color:rgba(217,70,239,.6);color:#fff}
+.cmdk-btn kbd{font:inherit;font-size:10px;padding:2px 6px;border-radius:6px;background:rgba(255,255,255,.08);color:#e9ddf7}
+@media (max-width:639px){.cmdk-btn span,.cmdk-btn kbd{display:none}.cmdk-btn{padding:10px}}
+#cmdk{position:fixed;inset:0;z-index:9990;display:none;align-items:flex-start;justify-content:center;padding:12vh 16px 16px;background:rgba(4,2,9,.8)}
+#cmdk.open{display:flex;animation:fxFade .2s ease}
+.cmdk-box{width:100%;max-width:560px;background:#12081b;border:1px solid rgba(217,70,239,.45);border-radius:20px;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 40px rgba(217,70,239,.2);animation:fxPop .35s cubic-bezier(.2,.9,.3,1.12)}
+.cmdk-in{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.cmdk-in input{flex:1;background:transparent;border:0;outline:0;color:#fff;font-size:15px;font-weight:600}
+.cmdk-in kbd,.cmdk-foot kbd{font:inherit;font-size:10px;padding:2px 6px;border-radius:6px;background:rgba(255,255,255,.08);color:#bfaedb}
+.cmdk-list{max-height:50vh;overflow-y:auto;padding:8px}
+.cmdk-sec{font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#9885b8;padding:10px 12px 6px}
+.cmdk-it{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:12px;cursor:pointer;color:#f1e8fb;font-weight:700;font-size:14px}
+.cmdk-it.sel{background:rgba(217,70,239,.16)}
+.cmdk-it img{width:34px;height:34px;object-fit:contain}
+.cmdk-it small{margin-left:auto;color:#9885b8;font-weight:600;font-size:12px}
+.cmdk-foot{padding:10px 16px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:#9885b8;display:flex;gap:14px}
+
+/* ---------- Chế độ lite / giảm chuyển động ---------- */
+html.lite .glass-card.orbit::after,html.lite .top-row.t1::after,html.lite .pod-skin,html.lite .pod-crown{animation:none !important}
+@media (prefers-reduced-motion:reduce){
+  .glass-card.orbit::after,.top-row.t1::after,.mq-track,.pod-skin,.pod-crown,#modalTitle::after{animation:none !important}
+  .pod,.pod-base{animation:none !important}
+}
+
+/* ---------- Dải bóng chéo quét qua 3 ô Top (vàng / bạc / đồng) ---------- */
+.row-r1 .rank-panel::after,.row-r2 .rank-panel::after,.row-r3 .rank-panel::after,.pod-base::after{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(108deg,transparent 0 34%,rgba(255,255,255,.30) 34% 50%,transparent 50% 56%,rgba(255,255,255,.20) 56% 62%,transparent 62% 100%);
+  transform:translateX(-110%);animation:glossSweep 3.8s cubic-bezier(.4,0,.2,1) infinite}
+.pod-base{position:relative;overflow:hidden}
+@keyframes glossSweep{0%{transform:translateX(-110%)}55%,100%{transform:translateX(110%)}}
+html.lite .row-r1 .rank-panel::after,html.lite .row-r2 .rank-panel::after,html.lite .row-r3 .rank-panel::after,html.lite .pod-base::after{animation:none !important}
+@media (prefers-reduced-motion:reduce){.row-r1 .rank-panel::after,.row-r2 .rank-panel::after,.row-r3 .rank-panel::after,.pod-base::after{animation:none !important}}
+
+/* ---------- Màu theo khu vực (AS giữ nguyên màu đỏ gốc) ---------- */
+.region-pill.rg-NA{background:linear-gradient(135deg,#3b82f6,#1d4ed8);box-shadow:0 4px 14px rgba(59,130,246,.35)}
+.region-pill.rg-EU{background:linear-gradient(135deg,#22c55e,#15803d);box-shadow:0 4px 14px rgba(34,197,94,.35)}
+.region-pill.rg-SA{background:linear-gradient(135deg,#f59e0b,#b45309);box-shadow:0 4px 14px rgba(245,158,11,.35)}
+.region-pill.rg-AU{background:linear-gradient(135deg,#06b6d4,#0e7490);box-shadow:0 4px 14px rgba(6,182,212,.35)}
+.region-pill.rg-ME{background:linear-gradient(135deg,#a855f7,#7e22ce);box-shadow:0 4px 14px rgba(168,85,247,.35)}
+
+/* ---------- TOP 1 HERO v2 ---------- */
+.t1-hero{padding:42px 16px 34px}
+.t1x-bgw{position:absolute;inset:0;pointer-events:none;translate:calc(var(--hx,0)*-10px) calc(var(--hy,0)*-6px);transition:translate .25s ease-out}
+.t1x-rays{position:absolute;left:50%;top:46%;width:980px;height:980px;margin:-490px 0 0 -490px;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg,rgba(255,226,170,.10) 0 5deg,transparent 5deg 16deg);
+  -webkit-mask-image:radial-gradient(circle,#000 0,rgba(0,0,0,.6) 28%,transparent 62%);mask-image:radial-gradient(circle,#000 0,rgba(0,0,0,.6) 28%,transparent 62%);
+  animation:t1Spin 80s linear infinite;translate:calc(var(--hx,0)*-8px) calc(var(--hy,0)*-5px);transition:translate .25s ease-out}
+.t1x-wm{position:absolute;left:50%;top:46%;width:300px;height:300px;margin:-150px 0 0 -150px;opacity:.07;object-fit:contain;pointer-events:none}
+.t1x-crown{color:#facc15;font-size:26px;margin-bottom:4px;filter:drop-shadow(0 0 10px rgba(250,204,21,.85));animation:crownBob 2.6s ease-in-out infinite}
+.t1-pill{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(80,56,8,.75),rgba(40,28,6,.75));box-shadow:0 0 22px rgba(250,204,21,.3),inset 0 1px 0 rgba(255,255,255,.12)}
+.t1-pill::after{content:'';position:absolute;inset:0;pointer-events:none;transform:translateX(-120%);
+  background:linear-gradient(100deg,transparent 30%,rgba(255,240,170,.45) 50%,transparent 70%);animation:tbShine 3.6s ease-in-out infinite}
+.t1x-stage{position:relative;display:flex;flex-direction:column;align-items:center;margin-top:2px}
+.t1-skin{position:relative;z-index:1;translate:calc(var(--hx,0)*14px) calc(var(--hy,0)*8px);transition:transform .3s cubic-bezier(.2,.8,.2,1),translate .25s ease-out}
+.t1x-plat{position:relative;width:240px;height:48px;margin-top:-28px;pointer-events:none}
+.t1x-plat i{position:absolute;inset:0;border-radius:50%}
+.t1x-plat .a{background:radial-gradient(ellipse at 50% 50%,rgba(255,214,140,.7),rgba(217,70,239,.38) 45%,transparent 72%)}
+.t1x-plat .b,.t1x-plat .c{border:1.5px solid rgba(250,204,21,.6);opacity:0;animation:t1xPulse 3.2s ease-out infinite}
+.t1x-plat .c{animation-delay:1.6s}
+@keyframes t1xPulse{0%{transform:scale(.45);opacity:.9}100%{transform:scale(1.4);opacity:0}}
+.t1-hero .t1-name{text-shadow:0 0 22px rgba(250,204,21,.45),0 3px 0 rgba(0,0,0,.4);margin-top:12px}
+.t1x-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px;max-width:92vw}
+.t1x-chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:800;color:#f1e8fb;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);transition:transform .2s,border-color .2s}
+.t1x-chip:hover{transform:translateY(-2px);border-color:rgba(217,70,239,.6)}
+.t1x-chip img{width:16px;height:16px;object-fit:contain}
+.t1x-tier{color:var(--c);border-color:color-mix(in srgb,var(--c) 55%,transparent);background:color-mix(in srgb,var(--c) 14%,transparent)}
+.t1x-reg{font-size:11px !important;padding:5px 11px !important;border-radius:999px !important}
+.t1x-ember{position:absolute;bottom:12%;width:3px;height:3px;border-radius:50%;background:#ffd98a;box-shadow:0 0 6px #ffb347;opacity:0;pointer-events:none;animation:t1xRise 4s ease-in infinite}
+@keyframes t1xRise{0%{transform:translateY(0) scale(1);opacity:0}15%{opacity:.9}100%{transform:translateY(-240px) translateX(var(--dx,0px)) scale(.3);opacity:0}}
+html.lite .t1x-ember{display:none}
+html.lite .t1x-rays,html.lite .t1-pill::after,html.lite .t1x-crown{animation:none !important}
+html.lite .t1x-plat .b,html.lite .t1x-plat .c{animation:none !important;opacity:.35;transform:scale(1)}
+@media (prefers-reduced-motion:reduce){.t1x-rays,.t1-pill::after,.t1x-crown,.t1x-ember,.t1x-plat .b,.t1x-plat .c{animation:none !important}.t1x-ember{display:none}}
+
+/* ---------- TỐI ƯU HIỆU NĂNG ---------- */
+/* chỉ 12 hàng đầu có hiệu ứng trượt vào; các hàng còn lại hiện thẳng (tránh 100 animation cùng lúc) */
+#leaderboardBody .player-row:nth-child(n+13){animation:none}
+/* tạm dừng animation của khối đang ngoài màn hình */
+.off,.off *,.off::before,.off::after,.off *::before,.off *::after{animation-play-state:paused !important}
+/* cô lập vùng vẽ để cuộn không kéo theo repaint cả trang */
+.t1-hero,.pod-hero,.mq{contain:layout paint style}
+.mq-track{will-change:transform}
+html.lite #leaderboardBody .player-row{animation:none !important}
+html.lite .mq-track{animation-duration:90s}
+.perf-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9999;padding:10px 16px;border-radius:12px;background:#12081b;
+  border:1px solid rgba(217,70,239,.45);color:#f1e8fb;font-size:12px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.5);
+  animation:toastIn .3s ease,toastOut .4s ease 3.2s forwards;pointer-events:none}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,12px)}}
+@keyframes toastOut{to{opacity:0;transform:translate(-50%,12px)}}
+
+/* ---------- Viền Top 3: chỉ giữ 1 lớp viền mảnh, bỏ lớp viền chồng ---------- */
+.row-r1::after,.row-r2::after,.row-r3::after{display:none !important}
+.row-r1{border-color:rgba(234,179,8,.75);box-shadow:0 0 18px rgba(234,179,8,.12)}
+.row-r2{border-color:rgba(203,213,225,.55);box-shadow:0 0 14px rgba(203,213,225,.07)}
+.row-r3{border-color:rgba(251,146,60,.6);box-shadow:0 0 16px rgba(251,146,60,.09)}
+.row-r1:hover,.row-r2:hover,.row-r3:hover{box-shadow:0 0 24px rgba(217,70,239,.40) !important}
+</style>
+
+<script>
+/* ===== UPGRADE v2 ===== */
+(function () {
+    'use strict';
+    const root = document.documentElement;
+    const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const FINE = matchMedia('(hover:hover) and (pointer:fine)').matches;
+    const lite = () => root.classList.contains('lite');
+    const $ = (s, r) => (r || document).querySelector(s);
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    /* 0) HIỆU NĂNG: người dùng chọn được + tự giảm hiệu ứng khi máy giật */
+    (function () {
+        let pref = null; try { pref = localStorage.getItem('dtPerf'); } catch (e) {}
+        if (pref === 'lite') root.classList.add('lite'); else if (pref === 'full') root.classList.remove('lite');
+        const save = v => { try { localStorage.setItem('dtPerf', v); } catch (e) {} };
+        let btn = null;
+        const host = document.querySelector('footer .space-x-5');
+        if (host) {
+            btn = document.createElement('button'); btn.type = 'button'; btn.className = 'hover:text-fuchsia-400 transition-colors';
+            btn.innerHTML = '<i class="fa-solid fa-bolt"></i> <span></span>';
+            host.appendChild(btn);
+        }
+        const setBtn = () => { if (btn) btn.lastElementChild.textContent = lite() ? 'Hiệu năng: Nhẹ' : 'Hiệu năng: Đầy đủ'; };
+        setBtn();
+        if (btn) btn.addEventListener('click', () => {
+            if (lite()) { root.classList.remove('lite'); save('full'); } else { root.classList.add('lite'); save('lite'); }
+            setBtn();
+        });
+        function toast(msg) {
+            const t = document.createElement('div'); t.className = 'perf-toast'; t.textContent = msg;
+            document.body.appendChild(t); setTimeout(() => t.remove(), 3800);
+        }
+        if (pref !== 'full') setTimeout(() => {
+            let last = performance.now(), acc = [], strikes = 0; const t0 = last;
+            requestAnimationFrame(function frame(t) {
+                if (lite() || t - t0 > 25000) return;
+                const d = t - last; last = t;
+                if (!document.hidden && d < 500) acc.push(d);
+                if (acc.length >= 90) {
+                    const avg = acc.reduce((a, b) => a + b, 0) / acc.length; acc = [];
+                    strikes = avg > 30 ? strikes + 1 : 0;
+                    if (strikes >= 3) { root.classList.add('lite'); save('lite'); setBtn(); toast('Đã bật chế độ hiệu năng nhẹ để web mượt hơn'); return; }
+                }
+                requestAnimationFrame(frame);
+            });
+        }, 3500);
+    })();
+
+    /* 1) Thanh tiến trình cuộn */
+    const sb = document.createElement('div'); sb.id = 'scrollBar'; document.body.appendChild(sb);
+    let sTick = false;
+    function sUpd() { sTick = false; const h = root.scrollHeight - innerHeight; sb.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, scrollY / h) : 0).toFixed(4) + ')'; }
+    addEventListener('scroll', () => { if (!sTick) { sTick = true; requestAnimationFrame(sUpd); } }, { passive: true });
+
+    /* 2) Parallax nền theo chuột (đã bỏ con trỏ tùy chỉnh) */
+    if (FINE && !REDUCE) {
+        const fxbg = $('.fx-bg');
+        let px = 0, py = 0, spx = 0, spy = 0, run = false;
+        function loop() {
+            if (lite() || !fxbg) { run = false; return; }
+            spx += (px - spx) * .06; spy += (py - spy) * .06;
+            fxbg.style.setProperty('--px', spx.toFixed(3)); fxbg.style.setProperty('--py', spy.toFixed(3));
+            if (Math.abs(px - spx) + Math.abs(py - spy) > .002) requestAnimationFrame(loop); else run = false;
+        }
+        addEventListener('pointermove', e => {
+            if (e.pointerType === 'touch' || lite() || !fxbg) return;
+            px = e.clientX / innerWidth - .5; py = e.clientY / innerHeight - .5;
+            if (!run) { run = true; requestAnimationFrame(loop); }
+        }, { passive: true });
+    }
+
+    /* 3) Nghiêng 3D cho thẻ + nút từ tính */
+    if (FINE && !REDUCE && !lite()) {
+        const sel = '.step-card,.fx-stat';
+        document.querySelectorAll(sel).forEach(e => e.classList.add('tilt'));
+        let cur = null;
+        const reset = t => { t.style.setProperty('--rx', '0deg'); t.style.setProperty('--ry', '0deg'); t.style.setProperty('--ty', '0px'); };
+        let pe = null, pr = 0;
+        const tiltMove = e => {
+            if (lite()) return;
+            const t = e.target.closest && e.target.closest(sel);
+            if (cur && cur !== t) reset(cur);
+            cur = t || null;
+            if (!t) return;
+            const r = t.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+            t.style.setProperty('--ry', (x * 12).toFixed(2) + 'deg');
+            t.style.setProperty('--rx', (-y * 12).toFixed(2) + 'deg');
+            t.style.setProperty('--ty', '-5px');
+        };
+        document.addEventListener('pointermove', e => { pe = e; if (pr) return; pr = requestAnimationFrame(() => { pr = 0; tiltMove(pe); }); }, { passive: true });
+        document.documentElement.addEventListener('mouseleave', () => { if (cur) { reset(cur); cur = null; } });
+
+        document.querySelectorAll('.hero-btn').forEach(b => {
+            b.addEventListener('pointermove', e => {
+                const r = b.getBoundingClientRect();
+                b.style.translate = ((e.clientX - r.left - r.width / 2) * .18).toFixed(1) + 'px ' + ((e.clientY - r.top - r.height / 2) * .28).toFixed(1) + 'px';
+            });
+            b.addEventListener('pointerleave', () => { b.style.translate = ''; });
+        });
+    }
+
+    /* 4) Ripple khi bấm */
+    document.addEventListener('pointerdown', e => {
+        if (REDUCE) return;
+        const t = e.target.closest && e.target.closest('.hero-btn,.chip,.home-mode,.m-nav,.mode-btn,.cmdk-btn');
+        if (!t) return;
+        const r = t.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2;
+        const s = document.createElement('span'); s.className = 'rip';
+        s.style.cssText = 'width:' + d + 'px;height:' + d + 'px;left:' + (e.clientX - r.left - d / 2) + 'px;top:' + (e.clientY - r.top - d / 2) + 'px';
+        t.appendChild(s); s.addEventListener('animationend', () => s.remove());
+    }, { passive: true });
+
+    /* 5) Marquee chế độ + bảng điểm Tier */
+    (function () {
+        const first = $('#homeView > section'); if (!first) return;
+        const ms = modes.filter(m => m.id !== 'overall');
+        const half = '<div class="mq-half">' +
+            ms.map(m => '<span class="mq-i"><img src="' + esc(m.icon) + '" alt="">' + esc(m.name) + '</span>').join('') +
+            Object.entries(TIER_POINTS).map(([k, v]) => '<span class="mq-t">' + k + '<em>' + v + ' pts</em></span>').join('') +
+            '</div>';
+        const mq = document.createElement('div'); mq.className = 'mq sr'; mq.setAttribute('aria-hidden', 'true');
+        mq.innerHTML = '<div class="mq-track">' + half + half + '</div>';
+        first.after(mq);
+    })();
+
+    /* 6) PODIUM TOP 3 (tab Overall) */
+    (function () {
+        const lv = $('#leaderboardView'), t1 = $('#top1Hero'); if (!lv || !t1) return;
+        const pod = document.createElement('div'); pod.id = 'podiumHero'; pod.className = 'pod-hero hidden';
+        lv.insertBefore(pod, t1);
+        let key = '';
+        function render() {
+            if (activeTab !== 'overall' || regionFilter !== 'ALL' || searchQuery) { pod.classList.add('hidden'); key = ''; return; }
+            const top = [...players].sort((a, b) => b.points - a.points).filter(p => p.points > 0).slice(0, 3);
+            if (!top.length) { pod.classList.add('hidden'); key = ''; return; }
+            const k = top.map(p => p.username + ':' + p.points).join('|');
+            if (k === key && !pod.classList.contains('hidden')) return;
+            if (k === key) { pod.classList.remove('hidden'); return; }
+            key = k;
+            const order = [1, 0, 2].filter(i => top[i]);
+            pod.innerHTML = '<div class="pod-head"><i class="fa-solid fa-crown"></i> Top 3 Overall</div><div class="pod-grid">' +
+                order.map(i => {
+                    const p = top[i], r = i + 1, t = getCombatTitle(p.points), d = r === 1 ? 0 : r === 2 ? .15 : .3;
+                    return '<div class="pod pr' + r + '" data-u="' + esc(p.username) + '" style="--d:' + d + 's">' +
+                        '<div class="pod-card">' + (r === 1 ? '<i class="fa-solid fa-crown pod-crown"></i>' : '') +
+                        '<span class="pod-rk">#' + r + '</span>' +
+                        '<img class="pod-skin" src="https://render.crafty.gg/3d/bust/' + encodeURIComponent(p.username) + '" alt="" onerror="this.onerror=null;this.src=\'https://render.crafty.gg/3d/bust/Steve\'">' +
+                        '<div class="pod-name">' + esc(p.username) + '</div>' +
+                        '<span class="title-badge" style="color:' + t.color + ';background:' + t.bg + '">' + titleIconHtml(t) + t.name + '</span>' +
+                        '<div class="pod-pts">' + p.points + ' points</div></div>' +
+                        '<div class="pod-base"><b>' + r + '</b></div></div>';
+                }).join('') + '</div>';
+            pod.querySelectorAll('.pod').forEach(el => el.addEventListener('click', () => openPlayerModal(el.dataset.u)));
+            pod.classList.remove('hidden');
+        }
+        const orig = window.renderLeaderboard;
+        window.renderLeaderboard = function () {
+            const r = orig.apply(this, arguments);
+            requestAnimationFrame(() => setTimeout(render, 0));
+            return r;
+        };
+    })();
+
+    /* 7) TÌM NHANH Ctrl+K */
+    (function () {
+        const cm = document.createElement('div'); cm.id = 'cmdk';
+        cm.innerHTML = '<div class="cmdk-box"><div class="cmdk-in"><i class="fa-solid fa-magnifying-glass" style="color:#ff9df0"></i>' +
+            '<input id="cmdkInput" placeholder="Tìm người chơi hoặc chế độ..." autocomplete="off" spellcheck="false"><kbd>Esc</kbd></div>' +
+            '<div class="cmdk-list" id="cmdkList"></div>' +
+            '<div class="cmdk-foot"><span><kbd>↑</kbd> <kbd>↓</kbd> chọn</span><span><kbd>Enter</kbd> mở</span><span><kbd>Esc</kbd> đóng</span></div></div>';
+        document.body.appendChild(cm);
+        const input = $('#cmdkInput'), list = $('#cmdkList');
+        let items = [], sel = 0;
+        function draw() {
+            let html = '', last = '';
+            items.forEach((it, i) => {
+                if (it.k !== last) { html += '<div class="cmdk-sec">' + (it.k === 'p' ? 'Người chơi' : 'Chế độ') + '</div>'; last = it.k; }
+                html += it.k === 'p'
+                    ? '<div class="cmdk-it' + (i === sel ? ' sel' : '') + '" data-i="' + i + '"><img src="https://render.crafty.gg/3d/bust/' + encodeURIComponent(it.p.username) + '" alt="" onerror="this.style.visibility=\'hidden\'"><span>' + esc(it.p.username) + '</span><small>' + it.p.points + ' pts · ' + esc(it.p.region) + '</small></div>'
+                    : '<div class="cmdk-it' + (i === sel ? ' sel' : '') + '" data-i="' + i + '"><img src="' + esc(it.m.icon) + '" alt=""><span>' + esc(it.m.name) + '</span><small>Bảng xếp hạng</small></div>';
+            });
+            list.innerHTML = html || '<div class="cmdk-sec" style="text-align:center;padding:26px">Không tìm thấy kết quả</div>';
+        }
+        function build(q) {
+            q = q.trim().toLowerCase();
+            const ps = [...players].sort((a, b) => b.points - a.points).filter(p => !q || p.username.toLowerCase().includes(q)).slice(0, 6);
+            const ms = modes.filter(m => !q || m.name.toLowerCase().includes(q) || m.id.toLowerCase().includes(q)).slice(0, 5);
+            items = [...ps.map(p => ({ k: 'p', p })), ...ms.map(m => ({ k: 'm', m }))];
+            sel = 0; draw();
+        }
+        const isOpen = () => cm.classList.contains('open');
+        function open() { cm.classList.add('open'); input.value = ''; build(''); setTimeout(() => input.focus(), 20); }
+        function close() { cm.classList.remove('open'); input.blur(); }
+        function choose(i) {
+            const it = items[i]; if (!it) return;
+            close();
+            if (it.k === 'p') openPlayerModal(it.p.username); else goPage('board', { mode: it.m.id });
+        }
+        function mark() {
+            list.querySelectorAll('.cmdk-it').forEach(e => e.classList.toggle('sel', +e.dataset.i === sel));
+            const s = list.querySelector('.cmdk-it.sel'); if (s) s.scrollIntoView({ block: 'nearest' });
+        }
+        input.addEventListener('input', () => build(input.value));
+        list.addEventListener('click', e => { const t = e.target.closest('.cmdk-it'); if (t) choose(+t.dataset.i); });
+        list.addEventListener('mouseover', e => { const t = e.target.closest('.cmdk-it'); if (t && +t.dataset.i !== sel) { sel = +t.dataset.i; mark(); } });
+        cm.addEventListener('mousedown', e => { if (e.target === cm) close(); });
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); isOpen() ? close() : open(); return; }
+            if (!isOpen()) {
+                const tag = (e.target.tagName || '').toLowerCase();
+                if (e.key === '/' && tag !== 'input' && tag !== 'textarea') { e.preventDefault(); open(); }
+                return;
+            }
+            if (e.key === 'Escape') { e.preventDefault(); close(); }
+            else if (e.key === 'ArrowDown') { e.preventDefault(); if (items.length) { sel = (sel + 1) % items.length; mark(); } }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); if (items.length) { sel = (sel - 1 + items.length) % items.length; mark(); } }
+            else if (e.key === 'Enter') { e.preventDefault(); choose(sel); }
+        });
+        const auth = $('#userAuthContainer');
+        if (auth && auth.parentElement) {
+            const b = document.createElement('button'); b.className = 'cmdk-btn'; b.type = 'button'; b.setAttribute('aria-label', 'Tìm nhanh');
+            b.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i><span>Tìm nhanh</span><kbd>Ctrl K</kbd>';
+            b.addEventListener('click', open);
+            auth.parentElement.insertBefore(b, auth);
+        }
+    })();
+
+    /* 8) Scroll-spy cho menu (Quy Trình Test / FAQ) */
+    (function () {
+        if (!('IntersectionObserver' in window)) return;
+        const map = { testSection: 'navBtnTest', faqSection: 'navBtnFaq' }, vis = {};
+        const io = new IntersectionObserver(es => {
+            es.forEach(e => { vis[e.target.id] = e.isIntersecting; });
+            Object.keys(map).forEach(s => { const b = document.getElementById(map[s]); if (b) b.classList.toggle('active', !!vis[s] && currentPage === 'home'); });
+        }, { rootMargin: '-35% 0px -45% 0px' });
+        Object.keys(map).forEach(id => { const e = document.getElementById(id); if (e) io.observe(e); });
+    })();
+
+    /* 9) Điểm ở Top Players trang chủ đếm lên */
+    (function () {
+        const ht = $('#homeTopList'); if (!ht || REDUCE) return;
+        new MutationObserver(() => {
+            ht.querySelectorAll('.pt').forEach(el => {
+                if (el.dataset.c) return;
+                const n = parseInt(el.textContent, 10); if (!n) return;
+                el.dataset.c = 1;
+                const t0 = performance.now();
+                (function f(t) {
+                    const k = Math.min(1, (t - t0) / 800);
+                    el.textContent = Math.round(n * (1 - Math.pow(1 - k, 3))) + ' points';
+                    if (k < 1) requestAnimationFrame(f);
+                })(t0);
+            });
+        }).observe(ht, { childList: true });
+    })();
+
+    /* 10) Viền sáng chạy quanh thẻ Top Players */
+    (function () { const hl = $('#homeTopList'); const c = hl && hl.closest('.glass-card'); if (c) c.classList.add('orbit'); })();
+
+
+    /* 10) TOP 1 HERO v2 — thiết kế lại */
+    (function () {
+        const POS = [[3,18,110,-62],[13,52,120,38],[24,10,100,20],[30,62,110,-20],[64,8,100,-28],[71,56,120,52],[81,16,110,-50],[90,48,100,24],[47,72,90,70],[55,2,90,-70],[7,76,100,-14],[91,78,100,-44]];
+        const full = n => 'https://render.crafty.gg/3d/bust/' + encodeURIComponent(n);
+        const tierText = t => (String(t).startsWith('HT') ? 'High Tier ' : 'Low Tier ') + String(t).slice(-1);
+        let last = '';
+        window.renderTop1Hero = function () {
+            const el = document.getElementById('top1Hero');
+            if (!el) return;
+            const hide = () => { el.classList.add('hidden'); el.innerHTML = ''; last = ''; };
+            if (activeTab === 'overall') return hide();
+            let top = null, score = 0;
+            players.forEach(p => { const s = TIER_POINTS[(p.tiers || {})[activeTab]] || 0; if (s > score) { score = s; top = p; } });
+            if (!top) return hide();
+            const key = activeTab + '|' + top.username + '|' + score + '|' + players.length;
+            if (key === last) { el.classList.remove('hidden'); return; }
+            last = key;
+
+            const m = modes.find(x => x.id === activeTab) || modes[0];
+            const tr = top.tiers[activeTab], tc = getTierClass(tr), ct = getCombatTitle(top.points);
+            const bg = POS.slice(0, 8).map((p, i) => {
+                const pl = players[i % players.length];
+                return `<img class="t1-bgskin" style="left:${p[0]}%;top:${p[1]}%;height:${p[2]}px;--r:${p[3]}deg" src="${full(pl.username)}" alt="" onerror="this.style.display='none'">`;
+            }).join('');
+            let fx = '';
+            for (let i = 0; i < 10; i++) fx += `<span class="t1-spark" style="left:${15 + Math.random() * 70}%;top:${15 + Math.random() * 70}%;animation-delay:${(Math.random() * 3).toFixed(2)}s;animation-duration:${(2.4 + Math.random() * 2).toFixed(2)}s"></span>`;
+            for (let i = 0; i < 8; i++) fx += `<span class="t1x-ember" style="left:${(12 + Math.random() * 76).toFixed(1)}%;--dx:${((Math.random() - .5) * 60).toFixed(0)}px;animation-delay:${(Math.random() * 4).toFixed(2)}s;animation-duration:${(3.2 + Math.random() * 2.4).toFixed(2)}s"></span>`;
+
+            el.innerHTML = `
+                <div class="t1x-bgw"><div class="t1-bgskins">${bg}</div></div>
+                <img class="t1x-wm" src="${esc(m.icon)}" alt="">
+                <div class="t1-glow"><div class="t1-gtilt"><i class="t1-gcore"></i><i class="t1-garm a"></i><i class="t1-garm b"></i><i class="t1-gstars"></i></div></div>
+                ${fx}
+                <div class="t1-inner">
+                    <i class="fa-solid fa-crown t1x-crown"></i>
+                    <div class="t1-pill">#1</div>
+                    <div class="t1x-stage">
+                        <img class="t1-skin" src="${full(top.username)}" alt="${esc(top.username)}" onerror="this.onerror=null;this.src='https://render.crafty.gg/3d/bust/${encodeURIComponent(top.username)}'">
+                    </div>
+                    <div class="t1-name">${esc(top.username)}</div>
+                    <div class="t1x-chips">
+                        <span class="t1x-chip t1x-tier" style="--c:${tc.hex}"><img src="${esc(m.icon)}" alt="">${tierText(tr)}</span>
+                        <span class="t1x-chip"><i class="fa-solid fa-star" style="color:#fbbf24"></i>${score} points</span>
+                        <span class="t1x-chip" style="color:${ct.color}">${titleIconHtml(ct)}${ct.name}</span>
+                        <span class="region-pill rg-${esc(top.region)} t1x-reg">${esc(top.region)}</span>
+                    </div>
+                </div>`;
+            const inner = el.querySelector('.t1-inner');
+            inner.style.cursor = 'pointer';
+            inner.addEventListener('click', () => openPlayerModal(top.username));
+
+            if (!el._px && FINE && !REDUCE) {
+                el._px = 1;
+                let t = 0;
+                el.addEventListener('pointermove', e => {
+                    if (lite() || t) return;
+                    t = requestAnimationFrame(() => {
+                        t = 0;
+                        const r = el.getBoundingClientRect();
+                        el.style.setProperty('--hx', ((e.clientX - r.left) / r.width - .5).toFixed(3));
+                        el.style.setProperty('--hy', ((e.clientY - r.top) / r.height - .5).toFixed(3));
+                    });
+                }, { passive: true });
+                el.addEventListener('pointerleave', () => { el.style.setProperty('--hx', 0); el.style.setProperty('--hy', 0); });
+            }
+            el.classList.remove('hidden');
+        };
+    })();
+
+    /* 12) Dừng animation của khối đang ngoài màn hình */
+    (function () {
+        if (!('IntersectionObserver' in window)) return;
+        const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('off', !e.isIntersecting)), { rootMargin: '80px' });
+        document.querySelectorAll('.mq,.glass-card.orbit,.pod-hero').forEach(n => io.observe(n));
+    })();
 })();
 </script>
 
